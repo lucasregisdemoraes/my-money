@@ -1,10 +1,6 @@
 import Utils from "./utils.js"
 import TransactionsFunctions from "./transactionsFunctions.js"
 
-document.querySelector(".add-button-div .add-button").addEventListener("click", () => {
-    document.querySelector(".add-button-div .buttons").classList.toggle("active")
-})
-
 let data = {
     whereIsTheMoney: [
         {
@@ -101,26 +97,26 @@ const DOM = {
             <tr>
                 <td>Entradas</td>
                 ${Utils.getMonthsFromTransactions(transactions).map(month => {
-                    return `
+            return `
                     <td>${Utils.formatValueToCurrency(TransactionsFunctions.incomesSumByMonth(transactions, month))}</td>
                     `
-                }).join("")}
+        }).join("")}
             </tr>
             <tr>
                 <td>Saidas</td>
                 ${Utils.getMonthsFromTransactions(transactions).map(month => {
-                    return `
+            return `
                     <td>${Utils.formatValueToCurrency(TransactionsFunctions.expensesSumByMonth(transactions, month))}</td>
                     `
-                }).join("")}
+        }).join("")}
             </tr>
             <tr>
                 <td>Total</td>
                 ${Utils.getMonthsFromTransactions(transactions).map(month => {
-                    return `
+            return `
                     <td>${Utils.formatValueToCurrency(TransactionsFunctions.totalByMonth(transactions, month))}</td>
                     `
-                }).join("")}
+        }).join("")}
             </tr>
             `
 
@@ -161,8 +157,45 @@ const DOM = {
         //     `
         // }).join("")
         // container.innerHTML = elements
+    },
+    modal: {
+        open: modalType => {
+            document.querySelector(".modal").classList.add("active")
+            document.querySelector(".add-button-div .buttons").classList.remove("active")
+        },
+        close: (event) => {
+            event.preventDefault()
+            document.querySelector(".modal").classList.remove("active")
+        }
+    },
+    toogleAddButtonOptions: () => {
+        document.querySelector(".add-button-div .buttons").classList.toggle("active")
     }
 }
+
+// ==============================
+
+// open add button options
+document.querySelector(".add-button").addEventListener("click", () => DOM.toogleAddButtonOptions())
+
+// active selected payment local
+document.querySelectorAll(".payment-local").forEach(element => {
+    element.addEventListener("click", () => {
+        document.querySelectorAll(".payment-local").forEach(e => {
+            e.classList.remove("active")
+        })
+        element.classList.add("active")
+    })
+})
+
+// open modal
+document.querySelector("#new-income").addEventListener("click", () => DOM.modal.open("income"))
+document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("expense"))
+document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("expense"))
+
+// close modal
+document.querySelector("form button").addEventListener("click", (event) => DOM.modal.close(event))
+
 
 DOM.setWhereIsTheMoney(data.whereIsTheMoney)
 DOM.setInvestments(data.investments)
