@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMoney</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="./index.html">Inicio</a>
+                <a href="./pages/anual">Anual</a>
+                <a href="./pages/mensal">Mensal</a>
+                <a href="./pages/investimentos">Investimentos</a>
+            </nav>
+            <div></div>
+            <div class="add-button-div">
+                <span class="add-button">+</span>
+                <div class="buttons">
+                    <button id="new-investment">+ Novo Investimento</button>
+                    <button>+ Novo Lucro</button>
+                    <button>+ Nova Despesa</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <section id="whereIsTheMoneySection">
+                <h2>Onde esta o dinheiro</h2>
+                <div id="whereIsTheMoneyDiv" class="cards"></div>
+            </section>
+
+            <section id="annualSection">
+                <h2>Anual</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="investmentsSection">
+                <h2>Investimentos</h2>
+                <h3>Total</h3>
+                <div class="cards">
+                    <div class="card">
+                        <h3>Investido</h3>
+                        <p>0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Rend. do último mês</h3>
+                        <p>0</p>
+                    </div>
+                    <div class="card">
+                        <h3>% Rend. do último mês</h3>
+                        <p>0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Rend. total</h3>
+                        <p>0</p>
+                    </div>
+                    <div class="card">
+                        <h3>% Rend. total</h3>
+                        <p>0</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Inicio</th>
+                                <th>Investido</th>
+                                <th>Rend. do último mês</th>
+                                <th>% Rend. do último mês</th>
+                                <th>Rend. total</th>
+                                <th>% Rend. total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="./scripts/script.js" type="module"></script>
+</body>
+
+</html>
