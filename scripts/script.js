@@ -162,6 +162,111 @@ const DOM = {
         open: modalType => {
             document.querySelector(".modal").classList.add("active")
             document.querySelector(".add-button-div .buttons").classList.remove("active")
+
+            let content = ""
+
+            switch (modalType) {
+                case "new-income":
+                    content = `
+                        <h2>Adicionar Novo Ganho</h2>
+                        <form action="">
+                            <h3>Local do Pagamento</h3>
+                            <div class="payment-locals">
+                                <label for="account" class="payment-local">
+                                    <p>Conta</p>
+                                    <input type="radio" name="a" id="account">
+                                </label>
+                                <label for="cash" class="payment-local">
+                                    <p>Dinheiro</p>
+                                    <input type="radio" name="a" id="cash">
+                                </label>
+                                <label for="coin" class="payment-local">
+                                    <p>Moeda</p>
+                                    <input type="radio" name="a" id="coin">
+                                </label>
+                            </div>
+                            <div class="transaction-info">
+                                <div>
+                                    <label for="">Valor</label>
+                                    <input type="number">
+                                </div>
+                                <div>
+                                    <label for="">Data</label>
+                                    <input type="text">
+                                </div>
+                                <div>
+                                    <label for="">Descrição</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <button type="submit">Confirmar</button>
+                        </form>
+                    `
+                    break;
+                case "new-expense":
+                    content = `
+                        <h2>Adicionar Nova Despesa</h2>
+                        <form action="">
+                            <h3>Metodo de Pagamento</h3>
+                            <div class="payment-methods">
+                                <details class="payment-method">
+                                    <summary>Conta</summary>
+                                    <input type="number" id="account">
+                                </details>
+                                <details class="payment-method">
+                                    <summary>Dinheiro</summary>
+                                    <input type="number" id="cash">
+                                </details>
+                                <details class="payment-method">
+                                    <summary>Moeda</summary>
+                                    <input type="number" id="coin">
+                                </details>
+                            </div>
+                            <div class="transaction-info">
+                                <div>
+                                    <h3 class="value">Valor</h3>
+                                    <p>R$00,00</p>
+                                </div>
+                                <div>
+                                    <label for="">Data</label>
+                                    <input type="text">
+                                </div>
+                                <div>
+                                    <label for="">Descrição</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <button type="submit">Confirmar</button>
+                        </form>
+                        `
+                    break
+                case "new-investiment":
+                    content = `
+                        <h2>Adicionar Novo Investimento</h2>
+                        <form action="">
+                            <div class="transaction-info">
+                                <div>
+                                    <label for="">Valor</label>
+                                    <input type="number">
+                                </div>
+                                <div>
+                                    <label for="">Data</label>
+                                    <input type="text">
+                                </div>
+                                <div>
+                                    <label for="">Descrição</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <button type="submit">Confirmar</button>
+                        </form>
+                            `
+                    break
+                default:
+                    break;
+            }
+
+            document.querySelector(".modal .container").innerHTML = content
         },
         close: (event) => {
             event.preventDefault()
@@ -189,13 +294,9 @@ document.querySelectorAll(".payment-local").forEach(element => {
 })
 
 // open modal
-document.querySelector("#new-income").addEventListener("click", () => DOM.modal.open("income"))
-document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("expense"))
-document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("expense"))
-
-// close modal
-document.querySelector("form button").addEventListener("click", (event) => DOM.modal.close(event))
-
+document.querySelector("#new-income").addEventListener("click", () => DOM.modal.open("new-income"))
+document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("new-expense"))
+document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("new-investment"))
 
 DOM.setWhereIsTheMoney(data.whereIsTheMoney)
 DOM.setInvestments(data.investments)
