@@ -1,67 +1,73 @@
 import Utils from "./utils.js"
 import TransactionsFunctions from "./transactionsFunctions.js"
 
-let data = {
-    whereIsTheMoney: [
-        {
-            name: "conta",
-            value: 0
-        },
-        {
-            name: "dinheiro",
-            value: 0
-        },
-        {
-            name: "moeda",
-            value: 0
-        },
-        {
-            name: "investimentos",
-            value: 0
+// let data = {
+//     whereIsTheMoney: [
+//         {
+//             name: "conta",
+//             value: 0
+//         },
+//         {
+//             name: "dinheiro",
+//             value: 0
+//         },
+//         {
+//             name: "moeda",
+//             value: 0
+//         },
+//         {
+//             name: "investimentos",
+//             value: 0
+//         }
+//     ],
+//     investments: [
+//         {
+//             name: "investimento1",
+//             start: "00/00/00",
+//             invested: 0,
+//             lastMonthIncome: 0,
+//             lastMonthIncomePercentage: 0,
+//             totalIncome: 0,
+//             totalIncomePercentage: 0
+//         }
+//     ],
+//     transactions: [
+//         {
+//             date: "01/01/01",
+//             description: "abcde",
+//             value: 100,
+//         }
+//     ]
+// }
+
+const Storage = {
+    get: () => {
+        return localStorage.getItem("data") || {
+            whereIsTheMoney: [
+                {
+                    name: "conta",
+                    value: 0
+                },
+                {
+                    name: "dinheiro",
+                    value: 0
+                },
+                {
+                    name: "moeda",
+                    value: 0
+                },
+                {
+                    name: "investimentos",
+                    value: 0
+                }
+            ],
+            investments: [],
+            transactions: []
         }
-    ],
-    investments: [
-        {
-            name: "investimento1",
-            start: "00/00/00",
-            invested: 0,
-            lastMonthIncome: 0,
-            lastMonthIncomePercentage: 0,
-            totalIncome: 0,
-            totalIncomePercentage: 0
-        },
-        {
-            name: "investimento2",
-            start: "00/00/00",
-            invested: 0,
-            lastMonthIncome: 0,
-            lastMonthIncomePercentage: 0,
-            totalIncome: 0,
-            totalIncomePercentage: 0
-        }
-    ],
-    transactions: [
-        {
-            date: "01/01/01",
-            description: "abcde",
-            value: 100,
-        },
-        {
-            date: "01/01/01",
-            description: "abcde",
-            value: 100,
-        },
-        {
-            date: "01/01/01",
-            description: "abcde",
-            value: -100,
-        },
-        {
-            date: "01/02/01",
-            description: "abcde",
-            value: 100,
-        }
-    ]
+    },
+    set: (data) => {
+        localStorage.setItem(JSON.stringify(data))
+    }
 }
 
 const DOM = {
@@ -298,6 +304,6 @@ document.querySelector("#new-income").addEventListener("click", () => DOM.modal.
 document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("new-expense"))
 document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("new-investment"))
 
-DOM.setWhereIsTheMoney(data.whereIsTheMoney)
-DOM.setInvestments(data.investments)
-DOM.setAnnualTable(data.transactions)
+DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
+DOM.setInvestments(Storage.get().investments)
+DOM.setAnnualTable(Storage.get().transactions)
