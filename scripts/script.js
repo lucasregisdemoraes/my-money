@@ -238,4 +238,9 @@ document.querySelector("#new-income").addEventListener("click", () => DOM.modal.
 document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("new-expense"))
 document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("new-investment"))
 
+// new transaction
+document.querySelector("form").addEventListener("submit", event => {
+    TransactionsFunctions.new(event)
+    DOM.modal.close()
+})
 App.init()
