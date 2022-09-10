@@ -1,5 +1,6 @@
 import Utils from "./utils.js"
 import TransactionsFunctions from "./transactionsFunctions.js"
+import Storage from "./storage.js"
 
 // let data = {
 //     whereIsTheMoney: [
@@ -45,36 +46,6 @@ const App = {
         DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
         DOM.setInvestments(Storage.get().investments)
         DOM.setAnnualTable(Storage.get().transactions)
-    }
-}
-
-const Storage = {
-    get: () => {
-        return localStorage.getItem("data") || {
-            whereIsTheMoney: [
-                {
-                    name: "conta",
-                    value: 0
-                },
-                {
-                    name: "dinheiro",
-                    value: 0
-                },
-                {
-                    name: "moeda",
-                    value: 0
-                },
-                {
-                    name: "investimentos",
-                    value: 0
-                }
-            ],
-            investments: [],
-            transactions: []
-        }
-    },
-    set: (data) => {
-        localStorage.setItem(JSON.stringify(data))
     }
 }
 
