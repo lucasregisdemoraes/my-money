@@ -1,6 +1,6 @@
 export default {
     get: () => {
-        return localStorage.getItem("data") || {
+        return JSON.parse(localStorage.getItem("data")) || {
             whereIsTheMoney: [
                 {
                     name: "conta",
@@ -24,6 +24,6 @@ export default {
         }
     },
     set: (data) => {
-        localStorage.setItem(JSON.stringify(data))
+        localStorage.setItem("data", JSON.stringify(data))
     }
 }
