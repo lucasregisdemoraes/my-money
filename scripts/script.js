@@ -1,6 +1,12 @@
 import Utils from "./utils.js"
 import TransactionsFunctions from "./transactionsFunctions.js"
 
+
+//  adicionar função app init e reload
+
+// adicionar função para adicionar transação
+
+
 // let data = {
 //     whereIsTheMoney: [
 //         {
@@ -39,6 +45,14 @@ import TransactionsFunctions from "./transactionsFunctions.js"
 //         }
 //     ]
 // }
+
+const App = {
+    init: () => {
+        DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
+        DOM.setInvestments(Storage.get().investments)
+        DOM.setAnnualTable(Storage.get().transactions)
+    }
+}
 
 const Storage = {
     get: () => {
@@ -304,6 +318,4 @@ document.querySelector("#new-income").addEventListener("click", () => DOM.modal.
 document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("new-expense"))
 document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("new-investment"))
 
-DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
-DOM.setInvestments(Storage.get().investments)
-DOM.setAnnualTable(Storage.get().transactions)
+App.init()
