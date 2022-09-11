@@ -19,14 +19,12 @@ export default {
             }
         })
 
-        // let monthsNames = []
-        // months.forEach(month => {
-        //         monthsNames.push(Utils.formatDateToMonthName(month))
-        // })
-
-
-
         return months
+    },
+    convertMonthFormat: (month) => {
+        month = month.split("-")
+        month = `${month[2]}/${month[1]}/${month[0]}`
+        return month
     },
     formatDateToMonthName: date => {
         let monthNumber = date.substring(0, 2)

@@ -1,4 +1,5 @@
 import Storage from "./storage.js";
+import Utils from "./utils.js";
 
 export default {
     incomesSumByMonth: (transactions, month) => {
@@ -43,7 +44,7 @@ export default {
                 coin: inputsValue[2]
             },
             value: Number(inputsValue[0]) + Number(inputsValue[1]) + Number(inputsValue[2]),
-            date: inputsValue[3],
+            date: Utils.convertMonthFormat(inputsValue[3]),
             description: inputsValue[4]
         }
 
