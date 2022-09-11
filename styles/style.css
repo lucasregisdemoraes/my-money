@@ -114,7 +114,7 @@ main .container section {
     padding-block: 200px;
 }
 
-main .container #whereIsTheMoneySection {
+main .container section:first-of-type {
     padding-top: 100px;
 }
 
