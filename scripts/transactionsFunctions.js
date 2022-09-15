@@ -32,9 +32,7 @@ export default {
         });
         return total
     },
-    new: (event) => {
-        event.preventDefault()
-    
+    new: () => {    
         let inputsValue = [...document.querySelectorAll("form input")].map(input => input.value)
 
         let transaction = {
