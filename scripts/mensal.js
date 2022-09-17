@@ -71,6 +71,7 @@ const DOM = {
             document.querySelectorAll("form input").forEach(input => {
                 input.value = ""
             })
+            DOM.updateTotalValue()
         },
         close: () => {
             document.querySelector(".modal").classList.remove("active")
