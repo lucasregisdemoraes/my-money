@@ -205,7 +205,7 @@ const DOM = {
                         <button type="submit">Confirmar</button>
                 `
             }
-       
+
             document.querySelector(".modal .container h2").innerHTML = title
             document.querySelector(".modal .container form").innerHTML = content
         },
@@ -243,4 +243,15 @@ document.querySelector("form").addEventListener("submit", event => {
     TransactionsFunctions.new(event)
     DOM.modal.close()
 })
+
+// close modal when click on close modal button or press ESC
+window.addEventListener("keyup", (e) => {
+    if (e.key === "Escape") {
+        DOM.modal.close()
+    }
+})
+
+document.querySelector(".close-modal-button")
+    .addEventListener("click", () => DOM.modal.close())
+
 App.init()

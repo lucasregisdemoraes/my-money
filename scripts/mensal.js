@@ -101,4 +101,14 @@ document.querySelectorAll(".payment-method input").forEach(input => {
     input.addEventListener("keyup", () => DOM.updateTotalValue())
 })
 
+// fecha o modal quando pressionado ESC ou clicado no botão fechar
+window.addEventListener("keyup", (e) => {
+    if (e.key === "Escape") {
+        DOM.modal.close()
+    }
+})
+
+document.querySelector(".close-modal-button")
+    .addEventListener("click", () => DOM.modal.close())
+
 App.init()

@@ -165,11 +165,34 @@ main .container #investmentsSection>h3 {
 }
 
 .modal .container {
+    position: relative;
     background-color: var(---background-color);
     border-radius: 10px;
     height: fit-content;
     margin-block: 30px;
     padding: 30px;
+}
+
+.modal .container .close-modal-button {
+    position: absolute;
+    background-color: var(---background-color);
+    top: -20px;
+    right: -20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 40px;
+    display: flex;
+    cursor: pointer;
+}
+
+.modal .container .close-modal-button:hover::after {
+    opacity: .5;
+}
+
+.modal .container .close-modal-button::after {
+    content: "X";
+    margin: auto;
+    font: bold 35px sans-serif;
 }
 
 .modal .container h2 {
