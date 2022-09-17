@@ -9,6 +9,7 @@ const App = {
             DOM.setMonthTitle()
             DOM.setGeneralInfo(Storage.get().transactions)
         }
+        DOM.modal.cleanFields()
     },
     reload: () => {
         App.init()
@@ -71,6 +72,15 @@ const DOM = {
             DOM.modal.close()
             App.reload()
         }
+    },
+    updateTotalValue: () => {
+        let total = 0
+        document.querySelectorAll(".payment-method input").forEach(input => {
+            total += Number(input.value)
+        })
+
+        document.querySelector(".transaction-info .value")
+            .textContent = Utils.formatValueToCurrency(total)
     }
 }
 
@@ -85,5 +95,10 @@ document.querySelector(".add-button")
 // adiciona uma nova transação
 document.querySelector("form")
     .addEventListener("submit", event => DOM.validadeFields(event))
+
+// atualiza o valor do modal quando os metodos de pagamento são alterados
+document.querySelectorAll(".payment-method input").forEach(input => {
+    input.addEventListener("keyup", () => DOM.updateTotalValue())
+})
 
 App.init()
