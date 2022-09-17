@@ -25,9 +25,10 @@ const App = {
 const DOM = {
     getFilterMonth: () => document.querySelector("#month-select").value,
     setMonthTitle: () => {
-        document.querySelector("#month-title")
-            .textContent =
-            Utils.formatDateToMonthName(DOM.getFilterMonth()) + " de " + DOM.getFilterMonth().substring(3)
+        document.querySelectorAll(".month-title").forEach(element => {
+            element.textContent =
+                Utils.formatDateToMonthName(DOM.getFilterMonth()) + " de " + DOM.getFilterMonth().substring(3)
+        })
     },
     setGeneralInfo: (transactions) => {
         const paragraphs = [...document.querySelectorAll("#general-info-section .cards .card p")].map(p => p)
