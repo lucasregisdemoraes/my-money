@@ -8,6 +8,7 @@ const App = {
             DOM.setMonthsOptions()
             DOM.setMonthTitle()
             DOM.setGeneralInfo(Storage.get().transactions)
+            DOM.setMonthTable(Storage.get().transactions)
         }
         DOM.modal.cleanFields()
     },
@@ -17,6 +18,7 @@ const App = {
     secondaryReload: () => {
         DOM.setGeneralInfo(Storage.get().transactions)
         DOM.setMonthTitle()
+        DOM.setMonthTable(Storage.get().transactions)
     }
 }
 
@@ -35,6 +37,25 @@ const DOM = {
             Utils.formatValueToCurrency(TransactionsFunctions.expensesSumByMonth(transactions, DOM.getFilterMonth()))
         paragraphs[2].textContent =
             Utils.formatValueToCurrency(TransactionsFunctions.totalByMonth(transactions, DOM.getFilterMonth()))
+    },
+    setMonthTable: transactions => {
+        document.querySelector("table tbody")
+            .innerHTML = transactions.map(transaction => {
+                if (transaction.date.substring(3) === DOM.getFilterMonth()) {
+                    return `
+                        <tr>
+                            <td>${transaction.date.substring(0, 2)}</td>
+                            <td>${transaction.description}</td>
+                            <td>${Utils.formatValueToCurrency(transaction.value)}</td>
+                            <td class="table-more-info-button">
+                                <abbr title="Mais informações">
+                                    <div></div><div></div><div></div>
+                                </abbr>
+                            </td>
+                        </tr>
+                    `
+                }
+            }).join("")
     },
     setMonthsOptions: () => {
         document.querySelector("#month-select").innerHTML =

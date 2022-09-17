@@ -34,6 +34,7 @@ a {
     text-decoration: none;
 }
 
+/* =========    TABLE     ========= */
 .table-container {
     overflow-x: auto;
 }
@@ -44,6 +45,20 @@ table {
     margin-inline: auto;
     margin-top: 25px;
 }
+
+table .table-more-info-button:hover {
+    opacity: .5;
+    cursor: pointer;
+}
+
+table .table-more-info-button div {
+    display: inline-block;
+    margin-inline: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(---text-color);
+} 
 
 /* =========    HEADER     ========= */
 header {
