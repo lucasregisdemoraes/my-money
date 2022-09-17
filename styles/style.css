@@ -9,6 +9,7 @@
 
 * {
     margin: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -156,6 +157,7 @@ main .container #investmentsSection>h3 {
     width: 100%;
     height: 100%;
     display: none;
+    overflow: auto;
 }
 
 .modal.active {
@@ -165,13 +167,48 @@ main .container #investmentsSection>h3 {
 .modal .container {
     background-color: var(---background-color);
     border-radius: 10px;
-    margin-block: auto;
+    height: fit-content;
+    margin-block: 30px;
     padding: 30px;
-    box-sizing: border-box;
 }
 
 .modal .container h2 {
     margin-bottom: 15px;
+}
+
+.modal .container form .payment-methods {
+    width: min(300px, 100%);
+    margin-inline: auto;
+    margin-bottom: 20px;
+}
+
+.modal .container form .payment-methods details {
+    background-color: rgb(70, 70, 70);
+    border-radius: 10px;
+    text-align: left;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.modal .container form .payment-methods details:hover {
+    background-color: rgb(80, 80, 80);
+}
+
+.modal .container form .payment-methods details summary {
+    padding-block: 10px;
+}
+
+.modal .container form .payment-methods details input,
+.modal .container form .transaction-info div input {
+    background-color: rgb(90, 90, 90);
+    color: var(---text-color);
+    font-size: 16px;
+    padding-inline: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 100%;
+    height: 50px;
+    display: block;
 }
 
 .modal .container form .transaction-info {
@@ -183,24 +220,14 @@ main .container #investmentsSection>h3 {
     margin-bottom: 20px;
 }
 
+.modal .container form .transaction-info div p {
+    font-size: 25px;
+}
+
 .modal .container form .transaction-info div label {
     text-align: left;
     display: block;
     font-weight: 700;
-}
-
-.modal .container form .transaction-info div input,
-.modal .container form .payment-methods details input {
-    background-color: rgb(90, 90, 90);
-    color: var(---text-color);
-    font-size: 16px;
-    padding-inline: 10px;
-    border-radius: 10px;
-    box-sizing: border-box;
-    border: none;
-    width: 100%;
-    height: 50px;
-    display: block;
 }
 
 .modal .container form button {
@@ -218,28 +245,4 @@ main .container #investmentsSection>h3 {
 .modal .container form button:hover {
     background-color: rgb(70, 70, 70);
     cursor: pointer;
-}
-
-/* add expense */
-.modal .container form .payment-methods {
-    width: min(300px, 100%);
-    margin-inline: auto;
-    margin-bottom: 20px;
-}
-
-.modal .container form .payment-methods details {
-    padding-block: 10px;
-    background-color: rgb(70, 70, 70);
-    border-radius: 10px;
-    text-align: left;
-    margin-bottom: 10px;
-    cursor: pointer;
-}
-
-.modal .container form .payment-methods details:hover {
-    background-color: rgb(80, 80, 80);
-}
-
-.modal .container form .transaction-info p {
-    font-size: 25px;
 }
