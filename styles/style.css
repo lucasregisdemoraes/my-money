@@ -268,7 +268,8 @@ main .container #investmentsSection>h3 {
     font-weight: 700;
 }
 
-.modal .container form button {
+.modal .container form button,
+.more-info-modal .container button {
     background-color: rgb(90, 90, 90);
     font-size: 20px;
     font-weight: 700;
@@ -278,9 +279,37 @@ main .container #investmentsSection>h3 {
     border: none;
     border-radius: 10px;
     transition: background-color .3s;
+    cursor: pointer;
 }
 
-.modal .container form button:hover {
+.modal .container form button:hover,
+.more-info-modal .container button:hover {
     background-color: rgb(70, 70, 70);
-    cursor: pointer;
+}
+
+/* === more info modal === */
+.more-info-modal .container p {
+    font-size: 28px;
+}
+
+.more-info-modal .container .payment-methods {
+    text-align: left;
+    display: flex;
+    column-gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-block: 50px;
+}
+
+.more-info-modal .container .transaction-info {
+    margin-bottom: 50px;
+}
+
+.more-info-modal .container .delete-button {
+    background-color: rgb(255, 25, 25);
+    margin-top: 10px;
+}
+
+.more-info-modal .container .delete-button:hover {
+    background-color: rgb(187, 25, 25);
 }

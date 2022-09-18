@@ -44,7 +44,7 @@ const DOM = {
             .innerHTML = transactions.map(transaction => {
                 if (transaction.date.substring(3) === DOM.getFilterMonth()) {
                     return `
-                        <tr>
+                        <tr data-index='${transactions.indexOf(transaction)}'>
                             <td>${transaction.date.substring(0, 2)}</td>
                             <td>${transaction.description}</td>
                             <td>${Utils.formatValueToCurrency(transaction.value)}</td>
@@ -104,8 +104,36 @@ const DOM = {
 
         document.querySelector(".transaction-info .value")
             .textContent = Utils.formatValueToCurrency(total)
+    },
+    moreInfoModal: {
+        open: (index) => {
+            const transaction = Storage.get().transactions[index]
+            
+            document.querySelector(".more-info-modal")
+                .classList.add("active")
+
+            document.querySelector(".more-info-modal").dataset.index = index
+
+            document.querySelector(".more-info-modal .title").textContent = "Mais informações de " + transaction.description
+
+            const paragraphs = [...document.querySelectorAll(".more-info-modal p")]
+                .map(p => p)
+
+            paragraphs[0].textContent = Utils.formatValueToCurrency(transaction.paymentMethods.account)
+            paragraphs[1].textContent = Utils.formatValueToCurrency(transaction.paymentMethods.cash)
+            paragraphs[2].textContent = Utils.formatValueToCurrency(transaction.paymentMethods.coin)
+            paragraphs[3].textContent = transaction.date
+            paragraphs[4].textContent = transaction.description
+            paragraphs[5].textContent = Utils.formatValueToCurrency(transaction.value)
+        },
+        close: () => {
+            document.querySelector(".more-info-modal")
+                .classList.remove("active")
+        }
     }
 }
+
+App.init()
 
 // recarega as informações quando muda de mês
 document.querySelector("#month-select")
@@ -134,4 +162,13 @@ window.addEventListener("keyup", (e) => {
 document.querySelector(".close-modal-button")
     .addEventListener("click", () => DOM.modal.close())
 
-App.init()
+// open more info modal 
+document.querySelectorAll(".table-more-info-button").forEach(element => {
+    element.addEventListener("click", event => {
+        DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
+    })
+})
+
+// close more info modal 
+document.querySelector(".close-more-info-modal")
+    .addEventListener("click", () => DOM.moreInfoModal.close())
