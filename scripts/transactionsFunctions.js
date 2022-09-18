@@ -37,9 +37,9 @@ export default {
 
         let transaction = {
             paymentMethods: {
-                account: inputsValue[0],
-                cash: inputsValue[1],
-                coin: inputsValue[2]
+                account: Number(inputsValue[0]),
+                cash: Number(inputsValue[1]),
+                coin: Number(inputsValue[2])
             },
             value: Number(inputsValue[0]) + Number(inputsValue[1]) + Number(inputsValue[2]),
             date: Utils.convertMonthFormat(inputsValue[3]),
