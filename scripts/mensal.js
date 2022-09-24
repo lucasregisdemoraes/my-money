@@ -108,7 +108,7 @@ const DOM = {
     moreInfoModal: {
         open: (index) => {
             const transaction = Storage.get().transactions[index]
-            
+
             document.querySelector(".more-info-modal")
                 .classList.add("active")
 
@@ -128,6 +128,33 @@ const DOM = {
         },
         close: () => {
             document.querySelector(".more-info-modal")
+                .classList.remove("active")
+        }
+    },
+    alertModal: {
+        open: (
+            // function to do
+            func,
+            // function parameter
+            parameter,
+            // message to show on alertModal
+            message
+        ) => {
+            document.querySelector(".alert-modal")
+                .classList.add("active")
+            document.querySelector(".alert-modal .container h2")
+                .textContent = message
+
+            document.querySelector(".yes-button")
+                .addEventListener("click", () => {
+                    func(parameter)
+                    DOM.alertModal.close()
+                })
+            document.querySelector(".no-button")
+                .addEventListener("click", () => DOM.alertModal.close())
+        },
+        close: () => {
+            document.querySelector(".alert-modal")
                 .classList.remove("active")
         }
     }
