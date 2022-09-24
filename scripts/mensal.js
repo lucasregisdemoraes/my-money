@@ -11,6 +11,9 @@ const App = {
             DOM.setMonthTable(Storage.get().transactions)
         }
         DOM.modal.cleanFields()
+        DOM.modal.close()
+        DOM.alertModal.close()
+        DOM.moreInfoModal.close()
     },
     reload: () => {
         App.init()
@@ -19,6 +22,10 @@ const App = {
         DOM.setGeneralInfo(Storage.get().transactions)
         DOM.setMonthTitle()
         DOM.setMonthTable(Storage.get().transactions)
+        DOM.modal.cleanFields()
+        DOM.modal.close()
+        DOM.alertModal.close()
+        DOM.moreInfoModal.close()
     }
 }
 
@@ -92,7 +99,6 @@ const DOM = {
             alert("Por favor, insira uma descrição")
         } else {
             TransactionsFunctions.new(event)
-            DOM.modal.close()
             App.reload()
         }
     },
@@ -148,7 +154,7 @@ const DOM = {
             document.querySelector(".yes-button")
                 .onclick = () => {
                     func(parameter)
-                    DOM.alertModal.close()
+                    App.secondaryReload()
                 }
             document.querySelector(".no-button")
                 .onclick = () => DOM.alertModal.close()
