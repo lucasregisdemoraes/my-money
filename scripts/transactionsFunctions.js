@@ -50,5 +50,9 @@ export default {
         storageCopy.transactions.push(transaction)
         Storage.set(storageCopy)
     },
-    remove: () => { }
+    remove: (index) => {
+        let storageCopy = Storage.get()
+        storageCopy.transactions.splice(index, 1)
+        Storage.set(storageCopy)
+    }
 }

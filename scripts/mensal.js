@@ -205,3 +205,15 @@ document.querySelectorAll(".table-more-info-button").forEach(element => {
 // close more info modal 
 document.querySelector(".close-more-info-modal")
     .addEventListener("click", () => DOM.moreInfoModal.close())
+
+// open alertModal for remove confirmation
+document.querySelector(".delete-button")
+    .addEventListener("click", (event) => DOM.alertModal.open(
+        // function to do
+        TransactionsFunctions.remove,
+        // function parameter
+        // get moreInfoModal transaction index
+        event.currentTarget.parentElement.parentElement.dataset.index,
+        // message to show
+        `Deseja deletar a transação?`
+    ))
