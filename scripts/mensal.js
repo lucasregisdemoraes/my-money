@@ -146,12 +146,12 @@ const DOM = {
                 .textContent = message
 
             document.querySelector(".yes-button")
-                .addEventListener("click", () => {
+                .onclick = () => {
                     func(parameter)
                     DOM.alertModal.close()
-                })
+                }
             document.querySelector(".no-button")
-                .addEventListener("click", () => DOM.alertModal.close())
+                .onclick = () => DOM.alertModal.close()
         },
         close: () => {
             document.querySelector(".alert-modal")
