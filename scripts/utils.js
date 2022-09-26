@@ -21,10 +21,10 @@ export default {
 
         return months
     },
-    convertMonthFormat: (month) => {
-        month = month.split("-")
-        month = `${month[2]}/${month[1]}/${month[0]}`
-        return month
+    convertDateFormat: (date, separator, newSeparator) => {        
+        date = date.split(separator)
+        date = date[2] + newSeparator + date[1] + newSeparator + date[0]
+        return date
     },
     formatDateToMonthName: date => {
         let monthNumber = date.substring(0, 2)
