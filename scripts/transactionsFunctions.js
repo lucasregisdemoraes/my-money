@@ -32,27 +32,30 @@ export default {
         });
         return total
     },
-    new: () => {    
-        let inputsValue = [...document.querySelectorAll("form input")].map(input => input.value)
-
-        let transaction = {
-            paymentMethods: {
-                account: Number(inputsValue[0]),
-                cash: Number(inputsValue[1]),
-                coin: Number(inputsValue[2])
-            },
-            value: Number(inputsValue[0]) + Number(inputsValue[1]) + Number(inputsValue[2]),
-            date: Utils.convertMonthFormat(inputsValue[3]),
-            description: inputsValue[4]
-        }
+    new: (parameters) => {
+        // function parameter
+        /* {
+            newTransaction: .......
+        } */
 
         let storageCopy = Storage.get()
-        storageCopy.transactions.push(transaction)
+        storageCopy.transactions.push(parameters.newTransaction)
         Storage.set(storageCopy)
     },
     remove: (index) => {
         let storageCopy = Storage.get()
         storageCopy.transactions.splice(index, 1)
+        Storage.set(storageCopy)
+    },
+    edit: (parameters) => {
+        // function parameters
+        /* {
+            index: .....,
+            newTransaction: .....
+        } */
+        let storageCopy = Storage.get()
+
+        storageCopy.transactions[parameters.index] = parameters.newTransaction
         Storage.set(storageCopy)
     }
 }

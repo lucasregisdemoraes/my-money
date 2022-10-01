@@ -72,8 +72,72 @@ const DOM = {
             `)
     },
     modal: {
-        open: () => {
+        open: (index) => {
             document.querySelector(".modal").classList.add("active")
+            const inputs = [...document.querySelectorAll("form input")].map(input => input)
+
+            // if index is not equals to undefined it means to open an edit modal
+            // then set inputs value to current transaction info
+            if (index !== undefined) {
+                const transaction = Storage.get().transactions[index]
+                inputs[0].value = transaction.paymentMethods.account
+                inputs[1].value = transaction.paymentMethods.cash
+                inputs[2].value = transaction.paymentMethods.coin
+                DOM.updateTotalValue()
+                inputs[3].value = Utils.convertDateFormat(transaction.date, "/", "-")
+                inputs[4].value = transaction.description;
+
+                [inputs[0], inputs[1], inputs[2]].forEach(input => {
+                    // if input have some value set details element open
+                    if (input.value !== "0") {
+                        input.parentElement.open = true
+                    }
+                })
+            }
+
+            document.querySelector("form").onsubmit = (event) => {
+                const newTransaction = {
+                    paymentMethods: {
+                        account: Number(inputs[0].value),
+                        cash: Number(inputs[1].value),
+                        coin: Number(inputs[2].value)
+                    },
+                    value: Number(inputs[0].value) + Number(inputs[1].value) + Number(inputs[2].value),
+                    date: Utils.convertDateFormat(inputs[3].value, "-", "/"),
+                    description: inputs[4].value
+                }
+
+                // if index is not equals to undefined it means to open an edit modal
+                // then validate fields and use transaction edit function
+                if (index !== undefined) {
+                    const transaction = Storage.get().transactions[index]
+                    DOM.validateFields({
+                        event: event,
+                        functionToDo: DOM.alertModal.open,
+                        functionParameters: {
+                            functionToDo: TransactionsFunctions.edit,
+                            functionParameters: {
+                                index: index,
+                                newTransaction: newTransaction
+                            },
+                            message: `Deseja editar ${transaction.description}?`
+                        },
+                        reload: false
+                    })
+
+                } else {
+                    // if it is not an edit modal validate fields and use new transaction function
+                    DOM.validateFields({
+                        event: event,
+                        functionToDo: TransactionsFunctions.new,
+                        functionParameters: {
+                            newTransaction: newTransaction
+                        },
+                        reload: true
+                    })
+
+                }
+            }
         },
         cleanFields: () => {
             document.querySelectorAll("form input").forEach(input => {
@@ -86,8 +150,15 @@ const DOM = {
             DOM.modal.cleanFields()
         }
     },
-    validadeFields: (event) => {
-        event.preventDefault()
+    validateFields: (parameters) => {
+        // function parameters
+        /* {
+                event: event,
+                functionToDo: ......,
+                functionParameters: {}
+                reload: ......
+        } */
+        parameters.event.preventDefault()
         const inputsValue =
             [...document.querySelectorAll("form input")].map(input => input.value)
 
@@ -98,8 +169,10 @@ const DOM = {
         } else if (inputsValue[4] === "") {
             alert("Por favor, insira uma descrição")
         } else {
-            TransactionsFunctions.new(event)
-            App.reload()
+            parameters.functionToDo(parameters.functionParameters)
+            if (parameters.reload === true) {
+                App.reload()
+            }
         }
     },
     updateTotalValue: () => {
@@ -138,22 +211,22 @@ const DOM = {
         }
     },
     alertModal: {
-        open: (
-            // function to do
-            func,
-            // function parameter
-            parameter,
-            // message to show on alertModal
-            message
-        ) => {
+        open: (parameters) => {
+            // function parameters
+            /* {
+                functionToDo: ......
+                functionParameters: {}
+                message: .......
+            } */
+
             document.querySelector(".alert-modal")
                 .classList.add("active")
             document.querySelector(".alert-modal .container h2")
-                .textContent = message
+                .textContent = parameters.message
 
             document.querySelector(".yes-button")
                 .onclick = () => {
-                    func(parameter)
+                    parameters.functionToDo(parameters.functionParameters)
                     App.secondaryReload()
                 }
             document.querySelector(".no-button")
@@ -175,10 +248,6 @@ document.querySelector("#month-select")
 // abre o modal
 document.querySelector(".add-button")
     .addEventListener("click", () => DOM.modal.open())
-
-// adiciona uma nova transação
-document.querySelector("form")
-    .addEventListener("submit", event => DOM.validadeFields(event))
 
 // atualiza o valor do modal quando os metodos de pagamento são alterados
 document.querySelectorAll(".payment-method input").forEach(input => {
@@ -209,11 +278,17 @@ document.querySelector(".close-more-info-modal")
 // open alertModal for remove confirmation
 document.querySelector(".delete-button")
     .addEventListener("click", (event) => DOM.alertModal.open(
-        // function to do
-        TransactionsFunctions.remove,
-        // function parameter
-        // get moreInfoModal transaction index
-        event.currentTarget.parentElement.parentElement.dataset.index,
-        // message to show
-        `Deseja deletar a transação?`
+        {
+            functionToDo: TransactionsFunctions.remove,
+            // get moreInfoModal transaction index
+            functionParameters: event.currentTarget.parentElement.parentElement.dataset.index,
+            message: `Deseja deletar a transação?`
+        }
     ))
+
+document.querySelector(".edit-button")
+    .addEventListener("click", (event) => {
+        DOM.moreInfoModal.close()
+        DOM.modal
+            .open(event.currentTarget.parentElement.parentElement.dataset.index)
+    })
