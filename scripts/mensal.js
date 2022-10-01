@@ -14,6 +14,13 @@ const App = {
         DOM.modal.close()
         DOM.confirmationModal.close()
         DOM.moreInfoModal.close()
+
+        // open more info modal 
+        document.querySelectorAll(".table-more-info-button").forEach(element => {
+            element.onclick = event => {
+                DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
+            }
+        })
     },
     reload: () => {
         App.init()
@@ -26,6 +33,13 @@ const App = {
         DOM.modal.close()
         DOM.confirmationModal.close()
         DOM.moreInfoModal.close()
+        
+        // open more info modal 
+        document.querySelectorAll(".table-more-info-button").forEach(element => {
+            element.onclick = event => {
+                DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
+            }
+        })
     }
 }
 
@@ -267,13 +281,6 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
     button.onclick = () => {
         DOM.moreInfoModal.close()
         DOM.modal.close()
-    }
-})
-
-// open more info modal 
-document.querySelectorAll(".table-more-info-button").forEach(element => {
-    element.onclick = event => {
-        DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
     }
 })
 
