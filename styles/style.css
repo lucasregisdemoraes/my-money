@@ -306,12 +306,12 @@ main .container #investmentsSection>h3 {
 }
 
 .more-info-modal .container .delete-button,
-.alert-modal .container .yes-button {
+.confirmation-modal .container .yes-button {
     background-color: rgb(255, 25, 25);
     margin-top: 10px;
 }
 
 .more-info-modal .container .delete-button:hover,
-.alert-modal .container .yes-button:hover {
+.confirmation-modal .container .yes-button:hover {
     background-color: rgb(187, 25, 25);
 }

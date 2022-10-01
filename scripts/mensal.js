@@ -12,7 +12,7 @@ const App = {
         }
         DOM.modal.cleanFields()
         DOM.modal.close()
-        DOM.alertModal.close()
+        DOM.confirmationModal.close()
         DOM.moreInfoModal.close()
     },
     reload: () => {
@@ -24,7 +24,7 @@ const App = {
         DOM.setMonthTable(Storage.get().transactions)
         DOM.modal.cleanFields()
         DOM.modal.close()
-        DOM.alertModal.close()
+        DOM.confirmationModal.close()
         DOM.moreInfoModal.close()
     }
 }
@@ -113,7 +113,7 @@ const DOM = {
                     const transaction = Storage.get().transactions[index]
                     DOM.validateFields({
                         event: event,
-                        functionToDo: DOM.alertModal.open,
+                        functionToDo: DOM.confirmationModal.open,
                         functionParameters: {
                             functionToDo: TransactionsFunctions.edit,
                             functionParameters: {
@@ -210,7 +210,7 @@ const DOM = {
                 .classList.remove("active")
         }
     },
-    alertModal: {
+    confirmationModal: {
         open: (parameters) => {
             // function parameters
             /* {
@@ -219,9 +219,9 @@ const DOM = {
                 message: .......
             } */
 
-            document.querySelector(".alert-modal")
+            document.querySelector(".confirmation-modal")
                 .classList.add("active")
-            document.querySelector(".alert-modal .container h2")
+            document.querySelector(".confirmation-modal .container h2")
                 .textContent = parameters.message
 
             document.querySelector(".yes-button")
@@ -230,10 +230,10 @@ const DOM = {
                     App.secondaryReload()
                 }
             document.querySelector(".no-button")
-                .onclick = () => DOM.alertModal.close()
+                .onclick = () => DOM.confirmationModal.close()
         },
         close: () => {
-            document.querySelector(".alert-modal")
+            document.querySelector(".confirmation-modal")
                 .classList.remove("active")
         }
     }
@@ -255,14 +255,21 @@ document.querySelectorAll(".payment-method input").forEach(input => {
 })
 
 // fecha o modal quando pressionado ESC ou clicado no botão fechar
+// close more info modal 
+
 window.addEventListener("keyup", (e) => {
     if (e.key === "Escape") {
         DOM.modal.close()
+        DOM.moreInfoModal.close()
     }
 })
 
-document.querySelector(".close-modal-button")
-    .addEventListener("click", () => DOM.modal.close())
+document.querySelectorAll(".close-modal-button").forEach(button => {
+    button.addEventListener("click", () => {
+        DOM.moreInfoModal.close()
+        DOM.modal.close()
+    })
+})
 
 // open more info modal 
 document.querySelectorAll(".table-more-info-button").forEach(element => {
@@ -271,13 +278,9 @@ document.querySelectorAll(".table-more-info-button").forEach(element => {
     })
 })
 
-// close more info modal 
-document.querySelector(".close-more-info-modal")
-    .addEventListener("click", () => DOM.moreInfoModal.close())
-
-// open alertModal for remove confirmation
+// open confirmationModal for remove confirmation
 document.querySelector(".delete-button")
-    .addEventListener("click", (event) => DOM.alertModal.open(
+    .addEventListener("click", (event) => DOM.confirmationModal.open(
         {
             functionToDo: TransactionsFunctions.remove,
             // get moreInfoModal transaction index
