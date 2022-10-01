@@ -243,55 +243,54 @@ App.init()
 
 // recarega as informações quando muda de mês
 document.querySelector("#month-select")
-    .addEventListener("change", () => App.secondaryReload())
+    .onchange = () => App.secondaryReload()
 
 // abre o modal
-document.querySelector(".add-button")
-    .addEventListener("click", () => DOM.modal.open())
+document.querySelector(".add-button").onclick = () => DOM.modal.open()
 
 // atualiza o valor do modal quando os metodos de pagamento são alterados
 document.querySelectorAll(".payment-method input").forEach(input => {
-    input.addEventListener("keyup", () => DOM.updateTotalValue())
+    input.onkeyup = () => DOM.updateTotalValue()
 })
 
 // fecha o modal quando pressionado ESC ou clicado no botão fechar
 // close more info modal 
 
-window.addEventListener("keyup", (e) => {
+window.onkeyup = e => {
     if (e.key === "Escape") {
         DOM.modal.close()
         DOM.moreInfoModal.close()
     }
-})
+}
 
 document.querySelectorAll(".close-modal-button").forEach(button => {
-    button.addEventListener("click", () => {
+    button.onclick = () => {
         DOM.moreInfoModal.close()
         DOM.modal.close()
-    })
+    }
 })
 
 // open more info modal 
 document.querySelectorAll(".table-more-info-button").forEach(element => {
-    element.addEventListener("click", event => {
+    element.onclick = event => {
         DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
-    })
+    }
 })
 
 // open confirmationModal for remove confirmation
 document.querySelector(".delete-button")
-    .addEventListener("click", (event) => DOM.confirmationModal.open(
+    .onclick = (event) => DOM.confirmationModal.open(
         {
             functionToDo: TransactionsFunctions.remove,
             // get moreInfoModal transaction index
             functionParameters: event.currentTarget.parentElement.parentElement.dataset.index,
             message: `Deseja deletar a transação?`
         }
-    ))
+    )
 
 document.querySelector(".edit-button")
-    .addEventListener("click", (event) => {
+    .onclick = (event) => {
         DOM.moreInfoModal.close()
         DOM.modal
             .open(event.currentTarget.parentElement.parentElement.dataset.index)
-    })
+    }
