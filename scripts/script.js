@@ -51,26 +51,18 @@ const App = {
 
 const DOM = {
     setWhereIsTheMoney: items => {
-        document.querySelector("#whereIsTheMoneyDiv").innerHTML = items.map(item => `
-            <div class="card">
-                <h3>${item.name}</h3>
-                <p>${Utils.formatValueToCurrency(item.value)}</p>
-            </div>
+        let elements = ""
+        for (const item in items) {
+            elements += `
+                <div class="card">
+                    <h3>${items[item].name}</h3>
+                    <p>${Utils.formatValueToCurrency(items[item].value)}</p>
+                </div>
             `
-        ).join("")
+        }
 
-        // ======== OU ========
-
-        // const container = document.querySelector("#whereIsTheMoneyDiv")
-        // let elements = items.map(item => {
-        //     return `
-        //     <div class="card">
-        //         <h3>${item.name}</h3>
-        //         <p>${item.value}</p>
-        //     </div>
-        //     `
-        // }).join("")
-        // container.innerHTML = elements
+        document.querySelector("#whereIsTheMoneyDiv")
+            .innerHTML = elements
     },
     setAnnualTable: transactions => {
         const trThead = document.querySelector("#annualSection table thead tr")

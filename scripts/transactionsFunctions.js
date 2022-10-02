@@ -39,7 +39,18 @@ export default {
         } */
 
         let storageCopy = Storage.get()
+
         storageCopy.transactions.push(parameters.newTransaction)
+
+        storageCopy.whereIsTheMoney.account.value =
+            storageCopy.whereIsTheMoney.account.value + parameters.newTransaction.paymentMethods.account
+
+        storageCopy.whereIsTheMoney.cash.value =
+            storageCopy.whereIsTheMoney.cash.value + parameters.newTransaction.paymentMethods.cash
+
+        storageCopy.whereIsTheMoney.coin.value =
+            storageCopy.whereIsTheMoney.coin.value + parameters.newTransaction.paymentMethods.coin
+
         Storage.set(storageCopy)
     },
     remove: (index) => {
