@@ -46,6 +46,11 @@ const App = {
         DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
         DOM.setInvestments(Storage.get().investments)
         DOM.setAnnualTable(Storage.get().transactions)
+    },
+    reload: () => {
+        App.init()
+        DOM.newTransactionModal.close()
+        DOM.newInvestmentModal.close()
     }
 }
 
@@ -135,74 +140,52 @@ const DOM = {
         // }).join("")
         // container.innerHTML = elements
     },
-    modal: {
-        open: modalType => {
-            document.querySelector(".modal").classList.add("active")
+    newTransactionModal: {
+        open: () => {
+            document.querySelector(".new-transaction-modal").classList.add("active")
             document.querySelector(".add-button-div .buttons").classList.remove("active")
 
-            let title = ""
-            let content = ""
+            document.querySelector(".new-transaction-modal form").onsubmit = event => {
+                event.preventDefault()
 
-            if (modalType === "new-investment") {
-                title = "Adicionar Novo Investimento"
-                content = `
-                    <div class="transaction-info">
-                        <div>
-                            <label for="value">Valor</label>
-                            <input name="value" type="number">
-                        </div>
-                        <div>
-                            <label for="date">Data</label>
-                            <input name="date" type="date">
-                        </div>
-                        <div>
-                            <label for="description">Descrição</label>
-                            <input name="description" type="text">
-                        </div>
-                    </div>
-                    <button type="submit">Confirmar</button>
-                    `
-            } else {
-                title = "Adicionar Nova Transação"
-                content = `
-                    <h3>Metodo de Pagamento</h3>
-                        <div class="payment-methods">
-                            <details class="payment-method">
-                                <summary>Conta</summary>
-                                <input type="number" name="account">
-                            </details>
-                            <details class="payment-method">
-                                <summary>Dinheiro</summary>
-                                <input type="number" name="cash">
-                            </details>
-                            <details class="payment-method">
-                                <summary>Moeda</summary>
-                                <input type="number" name="coin">
-                            </details>
-                        </div>
-                        <div class="transaction-info">
-                            <div>
-                                <h3 class="value">Valor</h3>
-                                <p>R$00,00</p>
-                            </div>
-                            <div>
-                                <label for="date">Data</label>
-                                <input name="date" type="date">
-                            </div>
-                            <div>
-                                <label for="description">Descrição</label>
-                                <input name="description" type="text">
-                            </div>
-                        </div>
-                        <button type="submit">Confirmar</button>
-                `
+                const inputs = [...document.querySelectorAll(".new-transaction-modal form input")]
+                    .map(input => input)
+
+                const newTransaction = {
+                    paymentMethods: {
+                        account: Number(inputs[0].value),
+                        cash: Number(inputs[1].value),
+                        coin: Number(inputs[2].value)
+                    },
+                    value: Number(inputs[0].value) + Number(inputs[1].value) + Number(inputs[2].value),
+                    date: Utils.convertDateFormat(inputs[3].value, "-", "/"),
+                    description: inputs[4].value
+                }
+
+                if (inputs[0].value === "" && inputs[1].value === "" && inputs[2].value === "") {
+                    alert("Por favor, insira um valor")
+                } else if (inputs[3].value === "") {
+                    alert("Por favor, insira uma data")
+                } else if (inputs[4].value === "") {
+                    alert("Por favor, insira uma descrição")
+                } else {
+                    TransactionsFunctions.new({
+                        newTransaction: newTransaction
+                    })
+                    App.reload()
+                }
             }
-
-            document.querySelector(".modal .container h2").innerHTML = title
-            document.querySelector(".modal .container form").innerHTML = content
         },
         close: () => {
-            document.querySelector(".modal").classList.remove("active")
+            document.querySelector(".new-transaction-modal").classList.remove("active")
+        }
+    },
+    newInvestmentModal: {
+        open: () => {
+
+        },
+        close: () => {
+            document.querySelector(".new-investment-modal").classList.remove("active")
         }
     },
     toogleAddButtonOptions: () => {
@@ -225,25 +208,27 @@ document.querySelectorAll(".payment-local").forEach(element => {
     })
 })
 
-// open modal
-document.querySelector("#new-income").addEventListener("click", () => DOM.modal.open("new-income"))
-document.querySelector("#new-expense").addEventListener("click", () => DOM.modal.open("new-expense"))
-document.querySelector("#new-investment").addEventListener("click", () => DOM.modal.open("new-investment"))
+// open new transaction modal
+document.querySelector("#new-transaction-button")
+    .onclick = () => DOM.newTransactionModal.open()
 
-// new transaction
-document.querySelector("form").addEventListener("submit", event => {
-    TransactionsFunctions.new(event)
-    DOM.modal.close()
-})
+// open new investment modal
+document.querySelector("#new-investment-button")
+    .onclick = () => DOM.newInvestmentModal.open()
 
 // close modal when click on close modal button or press ESC
 window.addEventListener("keyup", (e) => {
     if (e.key === "Escape") {
-        DOM.modal.close()
+        DOM.newTransactionModal.close()
+        DOM.newInvestmentModal.close()
     }
 })
 
-document.querySelector(".close-modal-button")
-    .addEventListener("click", () => DOM.modal.close())
+document.querySelectorAll(".close-modal-button").forEach(button => {
+    button.onclick = () => {
+        DOM.newTransactionModal.close()
+        DOM.newInvestmentModal.close()
+    }
+})
 
 App.init()

@@ -22,9 +22,8 @@
             <div class="add-button-div">
                 <span class="add-button">+</span>
                 <div class="buttons">
-                    <button id="new-income">+ Novo Ganho</button>
-                    <button id="new-expense">+ Nova Despesa</button>
-                    <button id="new-investment">+ Novo Investimento</button>
+                    <button id="new-transaction-button">+ Nova Transação</button>
+                    <button id="new-investment-button">+ Novo Investimento</button>
                 </div>
             </div>
         </div>
@@ -92,11 +91,66 @@
             </section>
         </div>
     </main>
-    <div class="modal">
+    <div class="modal new-transaction-modal">
         <div class="container">
             <div class="close-modal-button"></div>
-            <h2></h2>
-            <form></form>
+            <h2>Adicionar Nova Transação</h2>
+            <form>
+                <h3>Metodo de Pagamento</h3>
+                <div class="payment-methods">
+                    <details class="payment-method">
+                        <summary>Conta</summary>
+                        <input type="number" name="account" step="0.1">
+                    </details>
+                    <details class="payment-method">
+                        <summary>Dinheiro</summary>
+                        <input type="number" name="cash" step="0.01">
+                    </details>
+                    <details class="payment-method">
+                        <summary>Moeda</summary>
+                        <input type="number" name="coin" step="0.01">
+                    </details>
+                </div>
+                <div class="transaction-info">
+                    <div>
+                        <h3 class="value">Valor</h3>
+                        <p>R$00,00</p>
+                    </div>
+                    <div>
+                        <label for="date">Data</label>
+                        <input name="date" type="date">
+                    </div>
+                    <div>
+                        <label for="description">Descrição</label>
+                        <input name="description" type="text">
+                    </div>
+                </div>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal new-investment-modal">
+        <div class="container">
+            <div class="close-modal-button"></div>
+            <h2>Adicionar Novo Investimento</h2>
+            <form>
+                <div class="investment-info">
+                    <div>
+                        <label for="value">Valor</label>
+                        <input name="value" type="number" step="0.01">
+                    </div>
+                    <div>
+                        <label for="date">Data</label>
+                        <input name="date" type="date">
+                    </div>
+                    <div>
+                        <label for="description">Descrição</label>
+                        <input name="description" type="text">
+                    </div>
+                </div>
+                <button type="submit">Confirmar</button>
+            </form>
         </div>
     </div>
     <script src="./scripts/script.js" type="module"></script>
