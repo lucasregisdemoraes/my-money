@@ -1,45 +1,7 @@
 import Utils from "./utils.js"
 import TransactionsFunctions from "./transactionsFunctions.js"
+import InvestmentsFunctions from "./investmentsFunctions.js"
 import Storage from "./storage.js"
-
-// let data = {
-//     whereIsTheMoney: [
-//         {
-//             name: "conta",
-//             value: 0
-//         },
-//         {
-//             name: "dinheiro",
-//             value: 0
-//         },
-//         {
-//             name: "moeda",
-//             value: 0
-//         },
-//         {
-//             name: "investimentos",
-//             value: 0
-//         }
-//     ],
-//     investments: [
-//         {
-//             name: "investimento1",
-//             start: "00/00/00",
-//             invested: 0,
-//             lastMonthIncome: 0,
-//             lastMonthIncomePercentage: 0,
-//             totalIncome: 0,
-//             totalIncomePercentage: 0
-//         }
-//     ],
-//     transactions: [
-//         {
-//             date: "01/01/01",
-//             description: "abcde",
-//             value: 100,
-//         }
-//     ]
-// }
 
 const App = {
     init: () => {
@@ -114,13 +76,14 @@ const DOM = {
                 <td>${item.name}</td>
                 <td>${item.start}</td>
                 <td>${Utils.formatValueToCurrency(item.invested)}</td>
-                <td>${Utils.formatValueToCurrency(item.lastMonthIncome)}</td>
-                <td>${item.lastMonthIncomePercentage}%</td>
-                <td>${Utils.formatValueToCurrency(item.totalIncome)}</td>
-                <td>${item.totalIncome}%</td>
             </tr>
             `
         ).join("")
+
+        //         <td>${Utils.formatValueToCurrency(item.lastMonthIncome)}</td>
+        //         <td>${item.lastMonthIncomePercentage}%</td>
+        //         <td>${Utils.formatValueToCurrency(item.totalIncome)}</td>
+        //         <td>${item.totalIncome}%</td>
 
         // ======== OU ========
 
@@ -182,7 +145,35 @@ const DOM = {
     },
     newInvestmentModal: {
         open: () => {
+            document.querySelector(".new-investment-modal").classList.add("active")
+            document.querySelector(".add-button-div .buttons").classList.remove("active")
 
+            document.querySelector(".new-investment-modal form").onsubmit = event => {
+                event.preventDefault()
+
+                const inputs = [...document.querySelectorAll(".new-investment-modal input")]
+
+                const newInvestment = {
+                    name: inputs[0].value,
+                    value: Number(inputs[1].value),
+                    date: Utils.convertDateFormat(inputs[2].value, "-", "/"),
+                }
+
+                if (inputs[0].value === "") {
+                    alert("Por favor, insira um nome")
+                } else if (inputs[1].value === "") {
+                    alert("Por favor, insira um valor")
+                } else if (Number(inputs[1].value) > Storage.get().whereIsTheMoney.account.value) {
+                    alert("Por favor, insira um valor menor, o valor inserido é maior que o disponivel na conta")
+                } else if (Number(inputs[1].value) < 0) {
+                    alert("Por favor, insira um valor positivo")
+                } else if (inputs[2].value === "") {
+                    alert("Por favor, insira uma data de inicio")
+                } else {
+                    InvestmentsFunctions.new(newInvestment)
+                    App.reload()
+                }
+            }
         },
         close: () => {
             document.querySelector(".new-investment-modal").classList.remove("active")
