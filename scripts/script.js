@@ -6,6 +6,7 @@ import Storage from "./storage.js"
 const App = {
     init: () => {
         DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
+        DOM.setInvestmentsCards(Storage.get().investments)
         DOM.setInvestmentsTable(Storage.get().investments)
         DOM.setAnnualTable(Storage.get().transactions)
     },
@@ -70,6 +71,29 @@ const DOM = {
         trThead.innerHTML = theadElements
         tbody.innerHTML = tbodyElements
     },
+    setInvestmentsCards: investments => {
+        const cards = document.querySelectorAll("#investmentsSection .card")
+        const cardsInfo = [
+            investments.reduce((total, investment) =>
+                total + investment.invested, 0),
+            investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getLastMonthIncome(investment, "value"), 0),
+            investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getLastMonthIncome(investment, "percentage"), 0),
+            investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getTotalIncome(investment, "value"), 0),
+            investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getTotalIncome(investment, "percentage"), 0),
+        ]
+
+        for (let i = 0; i < 5; i++) {
+            if (i === 1 || i === 4) {
+                cards[i].lastElementChild.textContent = cardsInfo[i].toFixed(2) + "%"
+            } else {
+                cards[i].lastElementChild.textContent = Utils.formatValueToCurrency(cardsInfo[i])
+            }
+        }
+    },
     setInvestmentsTable: items => {
         document.querySelector("#investmentsSection table tbody").innerHTML = items.map(item => {
             if (item.status === "ativo") {
@@ -79,9 +103,9 @@ const DOM = {
                         <td>${item.start}</td>
                         <td>${Utils.formatValueToCurrency(item.invested)}</td>
                         <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getLastMonthIncome(item, "value"))}</td>
-                        <td>${InvestmentsFunctions.getLastMonthIncome(item, "percentage")}</td>
+                        <td>${InvestmentsFunctions.getLastMonthIncome(item, "percentage").toFixed(2)}%</td>
                         <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getTotalIncome(item, "value"))}</td>
-                        <td>${InvestmentsFunctions.getTotalIncome(item, "percentage")}</td>
+                        <td>${InvestmentsFunctions.getTotalIncome(item, "percentage").toFixed(2)}%</td>
                     </tr>
                 `
             }

@@ -38,7 +38,7 @@ export default {
             lastMonthIncomePercentage = lastMonthIncome / penultMonth.value
         }
 
-        return type === "value" ? lastMonthIncome : lastMonthIncomePercentage.toFixed(2) + "%"
+        return type === "value" ? lastMonthIncome : lastMonthIncomePercentage
     },
     getTotalIncome: (investment, type) => {
         let totalIncome = 0
@@ -52,7 +52,7 @@ export default {
             totalIncomePercentage = totalIncome / firstMonth.value
         }
 
-        return type === "value" ? totalIncome : totalIncomePercentage.toFixed(2) + "%"
+        return type === "value" ? totalIncome : totalIncomePercentage
 
     },
 }
