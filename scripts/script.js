@@ -6,7 +6,7 @@ import Storage from "./storage.js"
 const App = {
     init: () => {
         DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
-        DOM.setInvestments(Storage.get().investments)
+        DOM.setInvestmentsTable(Storage.get().investments)
         DOM.setAnnualTable(Storage.get().transactions)
     },
     reload: () => {
@@ -70,20 +70,23 @@ const DOM = {
         trThead.innerHTML = theadElements
         tbody.innerHTML = tbodyElements
     },
-    setInvestments: items => {
-        document.querySelector("#investmentsSection table tbody").innerHTML = items.map(item => `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.start}</td>
-                <td>${Utils.formatValueToCurrency(item.invested)}</td>
-            </tr>
-            `
-        ).join("")
+    setInvestmentsTable: items => {
+        document.querySelector("#investmentsSection table tbody").innerHTML = items.map(item => {
+            if (item.status === "ativo") {
+                return `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.start}</td>
+                        <td>${Utils.formatValueToCurrency(item.invested)}</td>
+                        <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getLastMonthIncome(item, "value"))}</td>
+                        <td>${InvestmentsFunctions.getLastMonthIncome(item, "percentage")}</td>
+                        <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getTotalIncome(item, "value"))}</td>
+                        <td>${InvestmentsFunctions.getTotalIncome(item, "percentage")}</td>
+                    </tr>
+                `
+            }
+        }).join("")
 
-        //         <td>${Utils.formatValueToCurrency(item.lastMonthIncome)}</td>
-        //         <td>${item.lastMonthIncomePercentage}%</td>
-        //         <td>${Utils.formatValueToCurrency(item.totalIncome)}</td>
-        //         <td>${item.totalIncome}%</td>
 
         // ======== OU ========
 
