@@ -24,6 +24,7 @@
                 <div class="buttons">
                     <button id="new-transaction-button">+ Nova Transação</button>
                     <button id="new-investment-button">+ Novo Investimento</button>
+                    <button id="new-transfer-button">+ Nova Transferência</button>
                 </div>
             </div>
         </div>
@@ -148,6 +149,49 @@
                         <label for="date">Data de Inicio</label>
                         <input name="date" type="date">
                     </div>
+                </div>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal new-transfer-modal">
+        <div class="container">
+            <div class="close-modal-button"></div>
+            <h2>Transferir</h2>
+            <form>
+                <div>
+                    <h3>De</h3>
+                    <label for="from-account">
+                        <input type="radio" value="account" name="from" id="from-account">
+                        <p>Conta</p>
+                    </label>
+                    <label for="from-cash">
+                        <input type="radio" value="cash" name="from" id="from-cash">
+                        <p>Dinheiro</p>
+                    </label>
+                    <label for="from-coin">
+                        <input type="radio" value="coin" name="from" id="from-coin">
+                        <p>Moeda</p>
+                    </label>
+                </div>
+                <div>
+                    <input id="transfer-value" name="value" step="0.01" type="number">
+                </div>
+                <div>
+                    <h3>Para</h3>
+                    <label for="to-account">
+                        <input type="radio" value="account" name="to" id="to-account">
+                        <p>Conta</p>
+                    </label>
+                    <label for="to-cash">
+                        <input type="radio" value="cash" name="to" id="to-cash">
+                        <p>Dinheiro</p>
+                    </label>
+                    <label for="to-coin">
+                        <input type="radio" value="coin" name="to" id="to-coin">
+                        <p>Moeda</p>
+                    </label>
                 </div>
                 <button type="submit">Confirmar</button>
             </form>

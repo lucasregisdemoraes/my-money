@@ -14,6 +14,7 @@ const App = {
         App.init()
         DOM.newTransactionModal.close()
         DOM.newInvestmentModal.close()
+        DOM.newTransferModal.close()
     }
 }
 
@@ -206,6 +207,46 @@ const DOM = {
             document.querySelector(".new-investment-modal").classList.remove("active")
         }
     },
+    newTransferModal: {
+        open: () => {
+            document.querySelector(".new-transfer-modal").classList.add("active")
+            document.querySelector(".add-button-div .buttons").classList.remove("active")
+
+            document.querySelector(".new-transfer-modal form").onsubmit = event => {
+                event.preventDefault()
+                const value = Number(document.querySelector("#transfer-value").value)
+                const from = [...document.getElementsByName("from")]
+                    .find(element => element.checked)
+                const to = [...document.getElementsByName("to")]
+                    .find(element => element.checked)
+
+                    let storageCopy = Storage.get()
+
+                if (from === undefined) {
+                    alert("Por favor, selecione o local de onde fazer a transferência")
+                } else if (value === "") {
+                    alert("Por favor, insira um valor")
+                } else if (value <= 0) {
+                    alert("Por favor, insira um valor maior que 0")
+                } else if(value > storageCopy.whereIsTheMoney[from.value].value) {
+                    alert(`Por favor, insira um valor maior menor ou igual ao disponível em: ${storageCopy.whereIsTheMoney[from.value].name}
+                                Valor disponível: ${Utils.formatValueToCurrency(storageCopy.whereIsTheMoney[from.value].value)}`)
+                } else if (to === undefined) {
+                    alert("Por favor, selecione o local para onde fazer a transferência")
+                } else {
+                    storageCopy.whereIsTheMoney[from.value].value -= value
+                    storageCopy.whereIsTheMoney[to.value].value += value
+
+                    Storage.set(storageCopy)
+
+                    App.reload()
+                }
+            }
+        },
+        close: () => {
+            document.querySelector(".new-transfer-modal").classList.remove("active")
+        },
+    },
     toogleAddButtonOptions: () => {
         document.querySelector(".add-button-div .buttons").classList.toggle("active")
     }
@@ -216,16 +257,6 @@ const DOM = {
 // open add button options
 document.querySelector(".add-button").addEventListener("click", () => DOM.toogleAddButtonOptions())
 
-// active selected payment local
-document.querySelectorAll(".payment-local").forEach(element => {
-    element.addEventListener("click", () => {
-        document.querySelectorAll(".payment-local").forEach(e => {
-            e.classList.remove("active")
-        })
-        element.classList.add("active")
-    })
-})
-
 // open new transaction modal
 document.querySelector("#new-transaction-button")
     .onclick = () => DOM.newTransactionModal.open()
@@ -234,11 +265,16 @@ document.querySelector("#new-transaction-button")
 document.querySelector("#new-investment-button")
     .onclick = () => DOM.newInvestmentModal.open()
 
-// close modal when click on close modal button or press ESC
+// open new transfer modal
+document.querySelector("#new-transfer-button")
+    .onclick = () => DOM.newTransferModal.open()
+
+// close modals when click on close modal button or press ESC
 window.addEventListener("keyup", (e) => {
     if (e.key === "Escape") {
         DOM.newTransactionModal.close()
         DOM.newInvestmentModal.close()
+        DOM.newTransferModal.close()
     }
 })
 
@@ -246,6 +282,7 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
     button.onclick = () => {
         DOM.newTransactionModal.close()
         DOM.newInvestmentModal.close()
+        DOM.newTransferModal.close()
     }
 })
 
