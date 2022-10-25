@@ -16,7 +16,7 @@ const App = {
         DOM.moreInfoModal.close()
 
         // open more info modal 
-        document.querySelectorAll(".table-more-info-button").forEach(element => {
+        document.querySelectorAll(".table-item-button").forEach(element => {
             element.onclick = event => {
                 DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
             }
@@ -35,7 +35,7 @@ const App = {
         DOM.moreInfoModal.close()
         
         // open more info modal 
-        document.querySelectorAll(".table-more-info-button").forEach(element => {
+        document.querySelectorAll(".table-item-button").forEach(element => {
             element.onclick = event => {
                 DOM.moreInfoModal.open(event.currentTarget.parentElement.dataset.index)
             }
@@ -69,7 +69,7 @@ const DOM = {
                             <td>${transaction.date.substring(0, 2)}</td>
                             <td>${transaction.description}</td>
                             <td>${Utils.formatValueToCurrency(transaction.value)}</td>
-                            <td class="table-more-info-button">
+                            <td class="table-item-button">
                                 <abbr title="Mais informações">
                                     <div></div><div></div><div></div>
                                 </abbr>

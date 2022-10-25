@@ -46,13 +46,16 @@ table {
     margin-top: 25px;
 }
 
-table .table-more-info-button:hover {
+table .table-item-button:hover {
     opacity: .5;
     cursor: pointer;
 }
 
-table .table-more-info-button div {
-    display: inline-block;
+table .table-item-button abbr {
+    display: flex;
+}
+
+table .table-item-button abbr div {
     margin-inline: 2px;
     width: 10px;
     height: 10px;

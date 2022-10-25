@@ -36,7 +36,7 @@ const DOM = {
                     <td>${investment.name}</td>
                     <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getLastMonthIncome(investment, "value"))}</td>
                     <td>${InvestmentsFunctions.getLastMonthIncome(investment, "percentage").toFixed(2)}%</td>
-                    <td class="table-more-info-button">
+                    <td class="table-item-button">
                         <abbr title="Opções">
                             <div></div><div></div><div></div>
                         </abbr>
@@ -51,7 +51,7 @@ const DOM = {
                     <td>${InvestmentsFunctions.getLastMonthIncome(investment, "percentage").toFixed(2)}%</td>
                     <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getTotalIncome(investment, "value"))}</td>
                     <td>${InvestmentsFunctions.getTotalIncome(investment, "percentage").toFixed(2)}%</td>
-                    <td class="table-more-info-button">
+                    <td class="table-item-button">
                         <abbr title="Opções">
                             <div></div><div></div><div></div>
                         </abbr>
