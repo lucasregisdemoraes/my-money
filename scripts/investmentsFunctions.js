@@ -7,7 +7,7 @@ export default {
         storageCopy.investments.push({
             name: newInvestment.name,
             start: newInvestment.date,
-            invested: newInvestment.value,
+            invested: Number(newInvestment.value),
             months: [
                 {
                     month: newInvestment.date.substring(3),

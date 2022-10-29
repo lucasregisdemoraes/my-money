@@ -4,16 +4,45 @@ import InvestmentsFunctions from "./investmentsFunctions.js";
 
 const App = {
     init: () => {
+        DOM.setCards(Storage.get().investments)
         DOM.setTable(Storage.get().investments, "simple")
     },
     reload: () => {
-        DOM.setTable(Storage.get().investments, "simple")
+        DOM.setCards(Storage.get().investments)
+        DOM.setTable(Storage.get().investments, document.querySelector("#detail-select").value)
         DOM.newInvestmentModal.close()
         DOM.newInvestmentModal.clearFields()
     }
 }
 
 const DOM = {
+    setCards: (investments) => {
+        const cards = [...document.querySelectorAll(".card")]
+
+        cards[0].lastElementChild.textContent = Utils
+            .formatValueToCurrency(investments.reduce((total, investment) =>
+                total + investment.invested, 0))
+        cards[1].lastElementChild.textContent = Utils
+            .formatValueToCurrency(investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getLastMonthIncome(investment, "value"), 0))
+        cards[2].lastElementChild.textContent = Utils
+            .formatValueToCurrency(investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getLastMonthIncome(investment, "percentage"), 0))
+        cards[3].lastElementChild.textContent = Utils
+            .formatValueToCurrency(investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getTotalIncome(investment, "value"), 0))
+        cards[4].lastElementChild.textContent = Utils
+            .formatValueToCurrency(investments.reduce((total, investment) =>
+                total + InvestmentsFunctions.getTotalIncome(investment, "percentage"), 0))
+
+        if (document.querySelector("#detail-select").value === "simple") {
+            cards[3].style.display = "none"
+            cards[4].style.display = "none"
+        } else {
+            cards[3].style.display = "block"
+            cards[4].style.display = "block"
+        }
+    },
     setTable: (investments, detailType) => {
         document.querySelector("table thead").innerHTML = detailType === "simple" ? `
             <tr>
@@ -35,7 +64,7 @@ const DOM = {
         
         `
 
-        document.querySelector("#investmentsSection table tbody").innerHTML = investments.map(investment => {
+        document.querySelector("table tbody").innerHTML = investments.map(investment => {
             return detailType === "simple" ? `
                 <tr>
                     <td>${investment.name}</td>
@@ -133,6 +162,7 @@ document.querySelector("#status-select").onchange = event => {
         Storage.get().investments
 
     DOM.setTable(investments, detailType)
+    App.reload()
 }
 
 document.querySelector("#detail-select").onchange = event => {
@@ -148,6 +178,7 @@ document.querySelector("#detail-select").onchange = event => {
         Storage.get().investments
 
     DOM.setTable(investments, detailType)
+    App.reload()
 }
 
 // open new investment modal
@@ -167,12 +198,3 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
 })
 
 App.init()
-
-
-
-// colocar os cards com o filtro de simples e detalhado
-
-// colocar o titulo equivalente ao filtro de status
-// Todos investimentos, Investmentos resgatados, investimentos ativos
-
-// Criar as opções para atualizar o investimento
