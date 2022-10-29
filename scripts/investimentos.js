@@ -4,18 +4,42 @@ import InvestmentsFunctions from "./investmentsFunctions.js";
 
 const App = {
     init: () => {
-        DOM.setCards(Storage.get().investments)
-        DOM.setTable(Storage.get().investments, "simple")
+        const status = DOM.getStatus()
+        const investments = status === "ativo" || status === "resgatado"
+            ?
+            Storage.get().investments.filter(investment =>
+                investment.status === status
+            )
+            :
+            Storage.get().investments
+
+        DOM.setCards(investments)
+        DOM.setTable(investments)
     },
     reload: () => {
-        DOM.setCards(Storage.get().investments)
-        DOM.setTable(Storage.get().investments, document.querySelector("#detail-select").value)
+        const status = DOM.getStatus()
+        const investments = status === "ativo" || status === "resgatado"
+            ?
+            Storage.get().investments.filter(investment =>
+                investment.status === status
+            )
+            :
+            Storage.get().investments
+
+        DOM.setCards(investments)
+        DOM.setTable(investments)
         DOM.newInvestmentModal.close()
         DOM.newInvestmentModal.clearFields()
     }
 }
 
 const DOM = {
+    getStatus: () => {
+        return document.querySelector("#status-select").value
+    },
+    getDetailType: () => {
+        return document.querySelector("#detail-select").value
+    },
     setCards: (investments) => {
         const cards = [...document.querySelectorAll(".card")]
 
@@ -43,7 +67,9 @@ const DOM = {
             cards[4].style.display = "block"
         }
     },
-    setTable: (investments, detailType) => {
+    setTable: investments => {
+        const detailType = DOM.getDetailType()
+
         document.querySelector("table thead").innerHTML = detailType === "simple" ? `
             <tr>
                 <th>Nome</th>
@@ -149,37 +175,9 @@ const DOM = {
     }
 }
 
-document.querySelector("#status-select").onchange = event => {
-    const status = event.currentTarget.value
-    const detailType = document.querySelector("#detail-select").value
+document.querySelector("#status-select").onchange = () => App.reload()
 
-    const investments = status === "ativo" || status === "resgatado"
-        ?
-        Storage.get().investments.filter(investment =>
-            investment.status === status
-        )
-        :
-        Storage.get().investments
-
-    DOM.setTable(investments, detailType)
-    App.reload()
-}
-
-document.querySelector("#detail-select").onchange = event => {
-    const detailType = event.currentTarget.value
-    const status = document.querySelector("#status-select").value
-
-    const investments = status === "ativo" || status === "resgatado"
-        ?
-        Storage.get().investments.filter(investment =>
-            investment.status === status
-        )
-        :
-        Storage.get().investments
-
-    DOM.setTable(investments, detailType)
-    App.reload()
-}
+document.querySelector("#detail-select").onchange = () => App.reload()
 
 // open new investment modal
 document.querySelector(".add-button").onclick = () => DOM.newInvestmentModal.open()
