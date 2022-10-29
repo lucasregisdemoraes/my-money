@@ -5,6 +5,11 @@ import InvestmentsFunctions from "./investmentsFunctions.js";
 const App = {
     init: () => {
         DOM.setTable(Storage.get().investments, "simple")
+    },
+    reload: () => {
+        DOM.setTable(Storage.get().investments, "simple")
+        DOM.newInvestmentModal.close()
+        DOM.newInvestmentModal.clearFields()
     }
 }
 
@@ -59,6 +64,59 @@ const DOM = {
                 </tr>
             `
         }).join("")
+    },
+    newInvestmentModal: {
+        open: () => {
+            document.querySelector(".new-investment-modal").classList.add("active")
+
+            document.querySelector(".new-investment-modal form").onsubmit = event => {
+                event.preventDefault()
+
+                const inputs = [...document.querySelectorAll(".new-investment-modal form input")]
+
+                const investment = {
+                    name: inputs[0].value,
+                    value: inputs[1].value,
+                    date: inputs[2].value,
+                }
+
+                try {
+                    DOM.validateFields({
+                        functionToDo: InvestmentsFunctions.new,
+                        functionParameter: investment
+                    })
+                } catch (error) {
+                    alert(error.message)
+                }
+            }
+        },
+        close: () => {
+            document.querySelector(".new-investment-modal")
+                .classList.remove("active")
+        },
+        clearFields: () => {
+            document.querySelectorAll(".new-investment-modal form input")
+                .forEach(input => input.value = "")
+        }
+    },
+    validateFields: (parameter) => {
+        // {
+        //  functionToDo: ......,
+        //  functionParameter: .......
+        // }
+
+        const inputsValue =
+            [...document.querySelectorAll("form input")].map(input => input.value)
+
+        if (inputsValue[0] === "") {
+            throw new Error("Por favor, insira um nome")
+        } else if (inputsValue[1] === "") {
+            throw new Error("Por favor, insira um valor")
+        } else if (inputsValue[2] === "") {
+            throw new Error("Por favor, insira uma data")
+        }
+        parameter.functionToDo(parameter.functionParameter)
+        App.reload()
     }
 }
 
@@ -92,4 +150,29 @@ document.querySelector("#detail-select").onchange = event => {
     DOM.setTable(investments, detailType)
 }
 
+// open new investment modal
+document.querySelector(".add-button").onclick = () => DOM.newInvestmentModal.open()
+
+// close modals when click close button or press ESC key
+window.onkeyup = e => {
+    if (e.key === "Escape") {
+        DOM.newInvestmentModal.close()
+    }
+}
+
+document.querySelectorAll(".close-modal-button").forEach(button => {
+    button.onclick = () => {
+        DOM.newInvestmentModal.close()
+    }
+})
+
 App.init()
+
+
+
+// colocar os cards com o filtro de simples e detalhado
+
+// colocar o titulo equivalente ao filtro de status
+// Todos investimentos, Investmentos resgatados, investimentos ativos
+
+// Criar as opções para atualizar o investimento
