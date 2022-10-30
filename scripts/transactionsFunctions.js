@@ -53,12 +53,21 @@ export default {
 
         Storage.set(storageCopy)
     },
-    remove: (index) => {
+    remove: index => {
         let storageCopy = Storage.get()
+
+        storageCopy.whereIsTheMoney.account.value -=
+            storageCopy.transactions[index].paymentMethods.account
+        storageCopy.whereIsTheMoney.cash.value -=
+            storageCopy.transactions[index].paymentMethods.cash
+        storageCopy.whereIsTheMoney.coin.value -=
+            storageCopy.transactions[index].paymentMethods.coin
+
         storageCopy.transactions.splice(index, 1)
+
         Storage.set(storageCopy)
     },
-    edit: (parameters) => {
+    edit: parameters => {
         // function parameters
         /* {
             index: .....,
@@ -66,7 +75,24 @@ export default {
         } */
         let storageCopy = Storage.get()
 
+        // remove the previous transaction values from whereIsTheMoney
+        storageCopy.whereIsTheMoney.account.value -=
+            storageCopy.transactions[parameters.index].paymentMethods.account
+        storageCopy.whereIsTheMoney.cash.value -=
+            storageCopy.transactions[parameters.index].paymentMethods.cash
+        storageCopy.whereIsTheMoney.coin.value -=
+            storageCopy.transactions[parameters.index].paymentMethods.coin
+
+        // add the new transaction values to whereIsTheMoney
+        storageCopy.whereIsTheMoney.account.value +=
+            parameters.newTransaction.paymentMethods.account
+        storageCopy.whereIsTheMoney.cash.value +=
+            parameters.newTransaction.paymentMethods.cash
+        storageCopy.whereIsTheMoney.coin.value +=
+            parameters.newTransaction.paymentMethods.coin
+
         storageCopy.transactions[parameters.index] = parameters.newTransaction
+
         Storage.set(storageCopy)
     }
 }
