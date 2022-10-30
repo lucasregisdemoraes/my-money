@@ -149,7 +149,7 @@ const DOM = {
                 const investment = {
                     name: inputs[0].value,
                     value: inputs[1].value,
-                    date: inputs[2].value,
+                    date: Utils.convertDateFormat(inputs[2].value, "-", "/"),
                 }
 
                 try {
@@ -244,3 +244,10 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
 })
 
 App.init()
+
+
+
+
+// criar função atualizar investimento
+
+// criar função remover investimento

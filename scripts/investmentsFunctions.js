@@ -10,8 +10,8 @@ export default {
             invested: Number(newInvestment.value),
             months: [
                 {
-                    month: newInvestment.date.substring(3),
-                    value: newInvestment.value
+                    month: newInvestment.date,
+                    value: Number(newInvestment.value)
                 }
             ],
             status: "ativo"
