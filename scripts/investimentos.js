@@ -36,8 +36,8 @@ const App = {
 
         DOM.setCards(investments)
         DOM.setTable(investments)
-        DOM.newInvestmentModal.close()
-        DOM.newInvestmentModal.clearFields()
+        DOM.mainModal.close()
+        DOM.mainModal.clearFields()
         DOM.moreInfoModal.close()
 
         // open investment options 
@@ -114,7 +114,7 @@ const DOM = {
                     <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getLastMonthIncome(investment, "value"))}</td>
                     <td>${InvestmentsFunctions.getLastMonthIncome(investment, "percentage").toFixed(2)}%</td>
                     <td class="table-item-button">
-                        <abbr title="Opções">
+                        <abbr title="Mais informações">
                             <div></div><div></div><div></div>
                         </abbr>
                     </td>
@@ -137,14 +137,21 @@ const DOM = {
             `
         }).join("")
     },
-    newInvestmentModal: {
-        open: () => {
-            document.querySelector(".new-investment-modal").classList.add("active")
+    mainModal: {
+        open: index => {
+            document.querySelector(".main-modal").classList.add("active")
+            const inputs = [...document.querySelectorAll(".main-modal form input")]
 
-            document.querySelector(".new-investment-modal form").onsubmit = event => {
+            // if index is not equals to undefined it means to open an edit modal
+            // then set inputs value to current investment info
+            if (index !== undefined) {
+                inputs[0].value = Storage.get().investments[index].name
+                inputs[1].value = Storage.get().investments[index].invested
+                inputs[2].value = Utils.convertDateFormat(Storage.get().investments[index].start, "/", "-")
+            }
+
+            document.querySelector(".main-modal form").onsubmit = event => {
                 event.preventDefault()
-
-                const inputs = [...document.querySelectorAll(".new-investment-modal form input")]
 
                 const investment = {
                     name: inputs[0].value,
@@ -153,21 +160,39 @@ const DOM = {
                 }
 
                 try {
-                    DOM.validateFields({
-                        functionToDo: InvestmentsFunctions.new,
-                        functionParameter: investment
-                    })
+                    // if index is not equals to undefined it means to open an edit modal
+                    // then validate fields and use investment edit function
+                    if (index !== undefined) {
+                        DOM.validateFields({
+                            functionToDo: DOM.confirmationModal.open,
+                            functionParameter: {
+                                functionToDo: InvestmentsFunctions.edit,
+                                functionParameters: {
+                                    index: index,
+                                    newInvestment: investment
+                                },
+                                message: `Deseja editar ${investment.name}?`
+                            }
+                        })
+
+                    } else {
+                        // if it is not an edit modal validate fields and use new investment function
+                        DOM.validateFields({
+                            functionToDo: InvestmentsFunctions.new,
+                            functionParameter: investment
+                        })
+                    }
                 } catch (error) {
                     alert(error.message)
                 }
             }
         },
         close: () => {
-            document.querySelector(".new-investment-modal")
+            document.querySelector(".main-modal")
                 .classList.remove("active")
         },
         clearFields: () => {
-            document.querySelectorAll(".new-investment-modal form input")
+            document.querySelectorAll(".main-modal form input")
                 .forEach(input => input.value = "")
         }
     },
@@ -198,6 +223,7 @@ const DOM = {
                 .classList.add("active")
 
             document.querySelector(".more-info-modal").dataset.index = index
+            document.querySelector(".more-info-modal .edit-button").dataset.index = index
 
             document.querySelector(".more-info-modal .title").textContent = investment.name
 
@@ -257,19 +283,19 @@ document.querySelector("#status-select").onchange = () => App.reload()
 document.querySelector("#detail-select").onchange = () => App.reload()
 
 // open new investment modal
-document.querySelector(".add-button").onclick = () => DOM.newInvestmentModal.open()
+document.querySelector(".add-button").onclick = () => DOM.mainModal.open()
 
 // close modals when click close button or press ESC key
 window.onkeyup = e => {
     if (e.key === "Escape") {
-        DOM.newInvestmentModal.close()
+        DOM.mainModal.close()
         DOM.moreInfoModal.close()
     }
 }
 
 document.querySelectorAll(".close-modal-button").forEach(button => {
     button.onclick = () => {
-        DOM.newInvestmentModal.close()
+        DOM.mainModal.close()
         DOM.moreInfoModal.close()
     }
 })
@@ -281,4 +307,20 @@ document.querySelector(".delete-button")
         message: `Deseja deletar o investimento?`
     })
 
+document.querySelector(".edit-button").onclick = event => {
+    DOM.mainModal.open(event.currentTarget.dataset.index)
+    DOM.moreInfoModal.close()
+}
+
 App.init()
+
+
+
+
+// criar função atualizar investimento
+
+// criar função editar investimento
+
+//  create transactions history
+
+// só adicionar um novo investmento se tiver dinheiro suficiente na conta

@@ -32,6 +32,35 @@ export default {
 
         Storage.set(storageCopy)
     },
+    edit: parameters => {
+        // {
+        //     index: ....,
+        //     newInvestment: ......
+        // }
+
+        let storageCopy = Storage.get()
+        const previousValue = Storage.get().investments[parameters.index].invested
+        const newValue = Number(parameters.newInvestment.value)
+
+        // remove the previous investments values from whereIsTheMoney
+        storageCopy.whereIsTheMoney.account.value += previousValue
+        storageCopy.whereIsTheMoney.investments.value -= previousValue
+
+        // add the new investments values to whereIsTheMoney
+        storageCopy.whereIsTheMoney.account.value -= newValue
+        storageCopy.whereIsTheMoney.investments.value += newValue
+
+        // add the new values to the investment
+        storageCopy.investments[parameters.index].name = parameters.newInvestment.name
+        storageCopy.investments[parameters.index].start = parameters.newInvestment.date
+        storageCopy.investments[parameters.index].invested = newValue
+        storageCopy.investments[parameters.index].months[0] = {
+            month: parameters.newInvestment.date,
+            value: newValue
+        }
+
+        Storage.set(storageCopy)
+    },
     getLastMonthIncome: (investment, type) => {
         let lastMonthIncome = 0
         let lastMonthIncomePercentage = 0
