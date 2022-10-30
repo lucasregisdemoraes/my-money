@@ -197,6 +197,8 @@ const DOM = {
             document.querySelector(".more-info-modal")
                 .classList.add("active")
 
+            document.querySelector(".more-info-modal").dataset.index = index
+
             document.querySelector(".more-info-modal .title").textContent = investment.name
 
             const paragraphs = [...document.querySelectorAll(".more-info-modal p")]
@@ -216,6 +218,35 @@ const DOM = {
         },
         close: () => {
             document.querySelector(".more-info-modal")
+                .classList.remove("active")
+        }
+    },
+    confirmationModal: {
+        open: parameters => {
+            // function parameters
+            /* {
+                functionToDo: ......
+                functionParameters: {}
+                message: .......
+            } */
+
+            document.querySelector(".confirmation-modal")
+                .classList.add("active")
+
+            document.querySelector(".confirmation-modal .container h2")
+                .textContent = parameters.message
+
+            document.querySelector(".yes-button")
+                .onclick = () => {
+                    parameters.functionToDo(parameters.functionParameters)
+                    App.reload()
+                    DOM.confirmationModal.close()
+                }
+            document.querySelector(".no-button")
+                .onclick = () => DOM.confirmationModal.close()
+        },
+        close: () => {
+            document.querySelector(".confirmation-modal")
                 .classList.remove("active")
         }
     }
@@ -243,11 +274,11 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
     }
 })
 
+document.querySelector(".delete-button")
+    .onclick = event => DOM.confirmationModal.open({
+        functionToDo: InvestmentsFunctions.remove,
+        functionParameters: event.currentTarget.parentElement.parentElement.dataset.index,
+        message: `Deseja deletar o investimento?`
+    })
+
 App.init()
-
-
-
-
-// criar função atualizar investimento
-
-// criar função remover investimento

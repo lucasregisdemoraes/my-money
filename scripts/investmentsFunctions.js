@@ -22,6 +22,16 @@ export default {
 
         Storage.set(storageCopy)
     },
+    remove: index => {
+        let storageCopy = Storage.get()
+        const value = Storage.get().investments[index].invested
+
+        storageCopy.whereIsTheMoney.account.value += value
+        storageCopy.whereIsTheMoney.investments.value -= value
+        storageCopy.investments.splice(index, 1)
+
+        Storage.set(storageCopy)
+    },
     getLastMonthIncome: (investment, type) => {
         let lastMonthIncome = 0
         let lastMonthIncomePercentage = 0
