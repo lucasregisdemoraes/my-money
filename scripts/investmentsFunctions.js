@@ -17,8 +17,8 @@ export default {
             status: "ativo"
         })
 
-        storageCopy.whereIsTheMoney.account.value -= newInvestment.value
-        storageCopy.whereIsTheMoney.investments.value += newInvestment.value
+        storageCopy.whereIsTheMoney.account.value -= Number(newInvestment.value)
+        storageCopy.whereIsTheMoney.investments.value += Number(newInvestment.value)
 
         Storage.set(storageCopy)
     },
