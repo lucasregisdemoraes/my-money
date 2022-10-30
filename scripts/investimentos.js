@@ -15,6 +15,14 @@ const App = {
 
         DOM.setCards(investments)
         DOM.setTable(investments)
+
+        // open investment options 
+        document.querySelectorAll(".table-item-button").forEach(element => {
+            element.onclick = event => {
+                const index = event.currentTarget.parentElement.dataset.index
+                DOM.moreInfoModal.open(index)
+            }
+        })
     },
     reload: () => {
         const status = DOM.getStatus()
@@ -30,6 +38,15 @@ const App = {
         DOM.setTable(investments)
         DOM.newInvestmentModal.close()
         DOM.newInvestmentModal.clearFields()
+        DOM.moreInfoModal.close()
+
+        // open investment options 
+        document.querySelectorAll(".table-item-button").forEach(element => {
+            element.onclick = event => {
+                const index = event.currentTarget.parentElement.dataset.index
+                DOM.moreInfoModal.open(index)
+            }
+        })
     }
 }
 
@@ -92,7 +109,7 @@ const DOM = {
 
         document.querySelector("table tbody").innerHTML = investments.map(investment => {
             return detailType === "simple" ? `
-                <tr>
+                <tr data-index='${investments.indexOf(investment)}'>
                     <td>${investment.name}</td>
                     <td>${Utils.formatValueToCurrency(InvestmentsFunctions.getLastMonthIncome(investment, "value"))}</td>
                     <td>${InvestmentsFunctions.getLastMonthIncome(investment, "percentage").toFixed(2)}%</td>
@@ -103,7 +120,7 @@ const DOM = {
                     </td>
                 </tr>
             ` : `
-                <tr>
+                <tr data-index='${investments.indexOf(investment)}'>
                     <td>${investment.name}</td>
                     <td>${investment.start}</td>
                     <td>${Utils.formatValueToCurrency(investment.invested)}</td>
@@ -172,6 +189,35 @@ const DOM = {
         }
         parameter.functionToDo(parameter.functionParameter)
         App.reload()
+    },
+    moreInfoModal: {
+        open: index => {
+            const investment = Storage.get().investments[index]
+
+            document.querySelector(".more-info-modal")
+                .classList.add("active")
+
+            document.querySelector(".more-info-modal .title").textContent = investment.name
+
+            const paragraphs = [...document.querySelectorAll(".more-info-modal p")]
+                .map(p => p)
+
+            paragraphs[0].textContent = investment.start
+            paragraphs[1].textContent = Utils.formatValueToCurrency(investment.invested)
+            paragraphs[2].textContent = investment.status
+
+            document.querySelector(".more-info-modal ul")
+                .innerHTML = investment.months.map(month => `
+                    <li>
+                        <p>${month.month}</p>
+                        <p>${Utils.formatValueToCurrency(month.value)}</p>
+                    </li>
+                `)
+        },
+        close: () => {
+            document.querySelector(".more-info-modal")
+                .classList.remove("active")
+        }
     }
 }
 
@@ -186,12 +232,14 @@ document.querySelector(".add-button").onclick = () => DOM.newInvestmentModal.ope
 window.onkeyup = e => {
     if (e.key === "Escape") {
         DOM.newInvestmentModal.close()
+        DOM.moreInfoModal.close()
     }
 }
 
 document.querySelectorAll(".close-modal-button").forEach(button => {
     button.onclick = () => {
         DOM.newInvestmentModal.close()
+        DOM.moreInfoModal.close()
     }
 })
 
