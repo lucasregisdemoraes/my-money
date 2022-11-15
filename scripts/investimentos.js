@@ -226,9 +226,24 @@ const DOM = {
             document.querySelector(".more-info-modal")
                 .classList.add("active")
 
-            document.querySelector(".more-info-modal").dataset.index = index
-            document.querySelector(".more-info-modal .edit-button").dataset.index = index
-            document.querySelector(".more-info-modal .update-button").dataset.index = index
+            /*  if investment is already redeemed show undo redeem button
+                and hide reddem button, otherwise show redeem button 
+                and hide undo redeem button  */
+            if (investment.status === "ativo") {
+                document.querySelector(".more-info-modal .undo-redeem-button")
+                    .style.display = "none"
+                document.querySelector(".more-info-modal .redeem-button")
+                    .style.display = "inline-block"
+            } else {
+                document.querySelector(".more-info-modal .undo-redeem-button")
+                    .style.display = "inline-block"
+                document.querySelector(".more-info-modal .redeem-button")
+                    .style.display = "none"
+            }
+
+            // add index data set to all buttons in modal
+            document.querySelectorAll(".more-info-modal button")
+                .forEach(button => button.dataset.index = index)
 
             document.querySelector(".more-info-modal .title").textContent = investment.name
 
@@ -246,6 +261,8 @@ const DOM = {
                         <p>${Utils.formatValueToCurrency(month.value)}</p>
                     </li>
                 `)
+
+
         },
         close: () => {
             document.querySelector(".more-info-modal")
@@ -368,16 +385,14 @@ document.querySelector(".update-button").onclick = event => {
     DOM.updateInvestmentModal.open(event.currentTarget.dataset.index)
 }
 
+document.querySelector(".redeem-button").onclick = event => {
+    InvestmentsFunctions.toggleRedeem(event.currentTarget.dataset.index)
+    App.reload()
+}
+
+document.querySelector(".undo-redeem-button").onclick = event => {
+    InvestmentsFunctions.toggleRedeem(event.currentTarget.dataset.index)
+    App.reload()
+}
+
 App.init()
-
-
-
-
-// criar função atualizar investimento
-
-//  create transactions history
-
-// só adicionar um novo investmento se tiver dinheiro suficiente na conta
-
-//  quando apertar no botão fechar fechar somente o modal aberto
-

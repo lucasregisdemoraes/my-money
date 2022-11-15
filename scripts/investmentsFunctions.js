@@ -68,11 +68,15 @@ export default {
 
         Storage.set(storageCopy)
     },
-    redeem: index => {
+    toggleRedeem: index => {
         let storageCopy = Storage.get()
+        const status = storageCopy.investments[index].status
 
+        // if investment status is "ativo", 
+        // change to "resgatado", otherwise to "ativo"
+        storageCopy.investments[index]
+            .status = status === "ativo" ? "resgatado" : "ativo"
 
-        
         Storage.set(storageCopy)
     },
     getLastMonthIncome: (investment, type) => {
