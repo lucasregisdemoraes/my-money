@@ -39,6 +39,7 @@ const App = {
         DOM.mainModal.close()
         DOM.mainModal.clearFields()
         DOM.moreInfoModal.close()
+        DOM.updateInvestmentModal.close()
 
         // open investment options 
         document.querySelectorAll(".table-item-button").forEach(element => {
@@ -145,9 +146,12 @@ const DOM = {
             // if index is not equals to undefined it means to open an edit modal
             // then set inputs value to current investment info
             if (index !== undefined) {
+                document.querySelector(".main-modal h2").textContent = "Editar investimento"
                 inputs[0].value = Storage.get().investments[index].name
                 inputs[1].value = Storage.get().investments[index].invested
                 inputs[2].value = Utils.convertDateFormat(Storage.get().investments[index].start, "/", "-")
+            } else {
+                document.querySelector(".main-modal h2").textContent = "Adicionar Novo Investimento"
             }
 
             document.querySelector(".main-modal form").onsubmit = event => {
@@ -224,6 +228,7 @@ const DOM = {
 
             document.querySelector(".more-info-modal").dataset.index = index
             document.querySelector(".more-info-modal .edit-button").dataset.index = index
+            document.querySelector(".more-info-modal .update-button").dataset.index = index
 
             document.querySelector(".more-info-modal .title").textContent = investment.name
 
@@ -275,6 +280,51 @@ const DOM = {
             document.querySelector(".confirmation-modal")
                 .classList.remove("active")
         }
+    },
+    updateInvestmentModal: {
+        open: index => {
+            document.querySelector(".update-modal").classList.add("active")
+
+            const valueInput = document.querySelector(".update-modal input[name='value']")
+            const monthInput = document.querySelector(".update-modal input[name='month']")
+
+            document.querySelector(".update-modal form").onsubmit = event => {
+                event.preventDefault()
+
+                const lastMonthValue = Storage.get().investments[index]
+                    .months[Storage.get().investments[index]
+                        .months.length - 1].value
+
+                try {
+                    if (valueInput.value === "") {
+                        throw new Error("Por favor, insira um valor")
+                    } else if (monthInput.value === "") {
+                        throw new Error("Por favor, insira um mês")
+                    } else if (valueInput.value < lastMonthValue) {
+                        throw new Error(`Por favor, insira um valor maior que o atual
+                        Valor atual: ${Utils.formatValueToCurrency(lastMonthValue)}`)
+                    } else {
+                        const newMonth = {
+                            month: monthInput.value,
+                            value: Number(valueInput.value)
+                        }
+
+                        InvestmentsFunctions.update(index, newMonth)
+                        DOM.updateInvestmentModal.clearFields()
+                        App.reload()
+                    }
+                } catch (error) {
+                    alert(error.message)
+                }
+            }
+        },
+        close: () => {
+            document.querySelector(".update-modal").classList.remove("active")
+        },
+        clearFields: () => {
+            document.querySelector(".update-modal input[name='value']").value = ""
+            document.querySelector(".update-modal input[name='month']").value = ""
+        }
     }
 }
 
@@ -290,6 +340,7 @@ window.onkeyup = e => {
     if (e.key === "Escape") {
         DOM.mainModal.close()
         DOM.moreInfoModal.close()
+        DOM.updateInvestmentModal.close()
     }
 }
 
@@ -297,6 +348,7 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
     button.onclick = () => {
         DOM.mainModal.close()
         DOM.moreInfoModal.close()
+        DOM.updateInvestmentModal.close()
     }
 })
 
@@ -312,6 +364,10 @@ document.querySelector(".edit-button").onclick = event => {
     DOM.moreInfoModal.close()
 }
 
+document.querySelector(".update-button").onclick = event => {
+    DOM.updateInvestmentModal.open(event.currentTarget.dataset.index)
+}
+
 App.init()
 
 
@@ -319,8 +375,9 @@ App.init()
 
 // criar função atualizar investimento
 
-// criar função editar investimento
-
 //  create transactions history
 
 // só adicionar um novo investmento se tiver dinheiro suficiente na conta
+
+//  quando apertar no botão fechar fechar somente o modal aberto
+

@@ -61,6 +61,20 @@ export default {
 
         Storage.set(storageCopy)
     },
+    update: (index, newMonth) => {
+        let storageCopy = Storage.get()
+
+        storageCopy.investments[index].months.push(newMonth)
+
+        Storage.set(storageCopy)
+    },
+    redeem: index => {
+        let storageCopy = Storage.get()
+
+
+        
+        Storage.set(storageCopy)
+    },
     getLastMonthIncome: (investment, type) => {
         let lastMonthIncome = 0
         let lastMonthIncomePercentage = 0

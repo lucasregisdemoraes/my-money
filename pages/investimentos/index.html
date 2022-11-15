@@ -94,6 +94,30 @@
         </div>
     </main>
 
+    <div class="modal main-modal">
+        <div class="container">
+            <div class="close-modal-button"></div>
+            <h2>Adicionar Novo Investimento</h2>
+            <form>
+                <div class="investment-info">
+                    <div>
+                        <label for="name">Nome</label>
+                        <input name="name" type="text">
+                    </div>
+                    <div>
+                        <label for="value">Valor</label>
+                        <input name="value" type="number" step="0.01">
+                    </div>
+                    <div>
+                        <label for="date">Data de Inicio</label>
+                        <input name="date" type="date">
+                    </div>
+                </div>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal more-info-modal">
         <div class="container">
             <div class="close-modal-button"></div>
@@ -120,30 +144,7 @@
 
             <button class="edit-button">Editar</button>
             <button class="delete-button">Apagar</button>
-        </div>
-    </div>
-
-    <div class="modal main-modal">
-        <div class="container">
-            <div class="close-modal-button"></div>
-            <h2>Adicionar Novo Investimento</h2>
-            <form>
-                <div class="investment-info">
-                    <div>
-                        <label for="name">Nome</label>
-                        <input name="name" type="text">
-                    </div>
-                    <div>
-                        <label for="value">Valor</label>
-                        <input name="value" type="number" step="0.01">
-                    </div>
-                    <div>
-                        <label for="date">Data de Inicio</label>
-                        <input name="date" type="date">
-                    </div>
-                </div>
-                <button type="submit">Confirmar</button>
-            </form>
+            <button class="update-button">Atualizar</button>
         </div>
     </div>
 
@@ -152,6 +153,26 @@
             <h2></h2>
             <button class="yes-button" style="margin-bottom: 10px; margin-top: 0;">sim</button>
             <button class="no-button">não</button>
+        </div>
+    </div>
+
+    <div class="modal update-modal">
+        <div class="container">
+            <div class="close-modal-button"></div>
+            <h2>Atualizar Investimento</h2>
+            <form>
+                <div class="investment-info">
+                    <div>
+                        <label for="value">Valor</label>
+                        <input name="value" type="number" step="0.01">
+                    </div>
+                    <div>
+                        <label for="month">Mês</label>
+                        <input name="month" type="date">
+                    </div>
+                </div>
+                <button type="submit">Confirmar</button>
+            </form>
         </div>
     </div>
     <script src="../../scripts/investimentos.js" type="module"></script>
