@@ -363,7 +363,7 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
 document.querySelector(".delete-button")
     .onclick = event => DOM.confirmationModal.open({
         functionToDo: InvestmentsFunctions.remove,
-        functionParameters: event.currentTarget.parentElement.parentElement.dataset.index,
+        functionParameters: event.currentTarget.dataset.index,
         message: `Deseja deletar o investimento?`
     })
 
