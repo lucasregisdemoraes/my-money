@@ -226,20 +226,11 @@ const DOM = {
             document.querySelector(".more-info-modal")
                 .classList.add("active")
 
-            /*  if investment is already redeemed show undo redeem button
-                and hide reddem button, otherwise show redeem button 
-                and hide undo redeem button  */
-            if (investment.status === "ativo") {
-                document.querySelector(".more-info-modal .undo-redeem-button")
-                    .style.display = "none"
-                document.querySelector(".more-info-modal .redeem-button")
-                    .style.display = "inline-block"
-            } else {
-                document.querySelector(".more-info-modal .undo-redeem-button")
-                    .style.display = "inline-block"
-                document.querySelector(".more-info-modal .redeem-button")
-                    .style.display = "none"
-            }
+            /*  if investment is already redeemed show "Desfazer resgatar investimento",
+            otherwise show "Resgatar investimento" */
+            document.querySelector(".more-info-modal .toggle-redeem-button")
+                .textContent = investment.status === "ativo" ?
+                    "Resgatar investimento" : "Desfazer resgatar investimento"
 
             // add index data set to all buttons in modal
             document.querySelectorAll(".more-info-modal button")
@@ -385,12 +376,7 @@ document.querySelector(".update-button").onclick = event => {
     DOM.updateInvestmentModal.open(event.currentTarget.dataset.index)
 }
 
-document.querySelector(".redeem-button").onclick = event => {
-    InvestmentsFunctions.toggleRedeem(event.currentTarget.dataset.index)
-    App.reload()
-}
-
-document.querySelector(".undo-redeem-button").onclick = event => {
+document.querySelector(".toggle-redeem-button").onclick = event => {
     InvestmentsFunctions.toggleRedeem(event.currentTarget.dataset.index)
     App.reload()
 }

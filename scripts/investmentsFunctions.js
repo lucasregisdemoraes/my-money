@@ -70,7 +70,19 @@ export default {
     },
     toggleRedeem: index => {
         let storageCopy = Storage.get()
+        const investment = storageCopy.investments[index]
         const status = storageCopy.investments[index].status
+        const lastMonthValue = investment.months[investment.months.length - 1].value
+
+        /* if redeem investment add the value to account and subtract from investments,
+            otherwise subtract from account an add to investments */
+        if (status === "ativo") {
+            storageCopy.whereIsTheMoney.account.value += lastMonthValue
+            storageCopy.whereIsTheMoney.investments.value -= lastMonthValue
+        } else {
+            storageCopy.whereIsTheMoney.account.value -= lastMonthValue
+            storageCopy.whereIsTheMoney.investments.value += lastMonthValue
+        }
 
         // if investment status is "ativo", 
         // change to "resgatado", otherwise to "ativo"
