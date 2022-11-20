@@ -104,7 +104,7 @@ export default {
             const penultMonth = investment.months[investment.months.length - 2]
 
             lastMonthIncome = lastMonth.value - penultMonth.value
-            lastMonthIncomePercentage = lastMonthIncome / penultMonth.value
+            lastMonthIncomePercentage = lastMonthIncome / penultMonth.value * 100
         }
 
         return type === "value" ? lastMonthIncome : lastMonthIncomePercentage
@@ -118,7 +118,7 @@ export default {
             const lastMonth = investment.months[investment.months.length - 1]
 
             totalIncome = lastMonth.value - firstMonth.value
-            totalIncomePercentage = totalIncome / firstMonth.value
+            totalIncomePercentage = totalIncome / firstMonth.value * 100
         }
 
         return type === "value" ? totalIncome : totalIncomePercentage
