@@ -2,6 +2,7 @@ import Utils from "./utils.js"
 import TransactionsFunctions from "./transactionsFunctions.js"
 import InvestmentsFunctions from "./investmentsFunctions.js"
 import Storage from "./storage.js"
+import Backup from "./backup.js"
 
 const App = {
     init: () => {
@@ -220,7 +221,7 @@ const DOM = {
                 const to = [...document.getElementsByName("to")]
                     .find(element => element.checked)
 
-                    let storageCopy = Storage.get()
+                let storageCopy = Storage.get()
 
                 if (from === undefined) {
                     alert("Por favor, selecione o local de onde fazer a transferência")
@@ -228,7 +229,7 @@ const DOM = {
                     alert("Por favor, insira um valor")
                 } else if (value <= 0) {
                     alert("Por favor, insira um valor maior que 0")
-                } else if(value > storageCopy.whereIsTheMoney[from.value].value) {
+                } else if (value > storageCopy.whereIsTheMoney[from.value].value) {
                     alert(`Por favor, insira um valor maior menor ou igual ao disponível em: ${storageCopy.whereIsTheMoney[from.value].name}
                                 Valor disponível: ${Utils.formatValueToCurrency(storageCopy.whereIsTheMoney[from.value].value)}`)
                 } else if (to === undefined) {
@@ -249,6 +250,11 @@ const DOM = {
     },
     toogleAddButtonOptions: () => {
         document.querySelector(".add-button-div .buttons").classList.toggle("active")
+    },
+    menu: {
+        toggle: () => {
+            document.querySelector(".menu ul").classList.toggle("active")
+        }
     }
 }
 
@@ -285,5 +291,26 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
         DOM.newTransferModal.close()
     }
 })
+
+document.querySelector(".menu-icon").onclick = () => {
+    DOM.menu.toggle()
+}
+
+document.querySelector(".upload-backup input")
+    .onchange = (e) => {
+        // get text in backup txt file
+        const file = e.currentTarget.files[0]
+        if (file) {
+            var reader = new FileReader();
+            reader.addEventListener('load', function (e) {
+                Backup.upload(e.target.result)
+            });
+            reader.readAsBinaryString(file);
+        }
+        setTimeout(App.reload, 1000)
+    }
+
+document.querySelector(".download-backup")
+    .onclick = () => Backup.download()
 
 App.init()

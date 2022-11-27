@@ -61,7 +61,7 @@ table .table-item-button abbr div {
     height: 10px;
     border-radius: 5px;
     background-color: var(---text-color);
-} 
+}
 
 /* =========    HEADER     ========= */
 header {
@@ -126,6 +126,62 @@ header .container .add-button-div .buttons button {
     font-size: 15px;
     color: var(---text-color);
     border: none;
+}
+
+header .container .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 40px;
+    margin-right: 50px;
+}
+
+header .container .menu .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+header .container .menu:hover .menu-icon:hover {
+    opacity: 0.7;
+}
+
+header .container .menu .menu-icon div {
+    background-color: white;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+}
+
+header .container .menu ul {
+    display: none;
+    list-style: none;
+    background-color: var(---background-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    position: absolute;
+    top: 100%;
+    right: 100%;
+}
+
+header .container .menu ul.active {
+    display: block;
+}
+
+header .container .menu ul li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+header .container .menu ul li:hover {
+    opacity: 0.7;
+}
+
+header .container .menu ul li input {
+    /* visibility: hidden; */
+    /* opacity: 0; */
+    /* display: none; */
 }
 
 /* =========    MAIN     ========= */
