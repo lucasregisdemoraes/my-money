@@ -156,6 +156,8 @@ const DOM = {
 
                 if (inputs[0].value === "" && inputs[1].value === "" && inputs[2].value === "") {
                     alert("Por favor, insira um valor")
+                } else if (isNaN(inputs[0].value) || isNaN(inputs[1].value) || isNaN(inputs[2].value)) {
+                    alert("Por favor, insira um valor numérico")
                 } else if (inputs[3].value === "") {
                     alert("Por favor, insira uma data")
                 } else if (inputs[4].value === "") {
@@ -192,6 +194,8 @@ const DOM = {
                     alert("Por favor, insira um nome")
                 } else if (inputs[1].value === "") {
                     alert("Por favor, insira um valor")
+                } else if (isNaN(inputs[1].value)) {
+                    alert("Por favor, insira um valor numérico")
                 } else if (Number(inputs[1].value) > Storage.get().whereIsTheMoney.account.value) {
                     alert("Por favor, insira um valor menor, o valor inserido é maior que o disponivel na conta")
                 } else if (Number(inputs[1].value) < 0) {
@@ -227,6 +231,8 @@ const DOM = {
                     alert("Por favor, selecione o local de onde fazer a transferência")
                 } else if (value === "") {
                     alert("Por favor, insira um valor")
+                } else if (isNaN(value)) {
+                    alert("Por favor, insira um valor numérico")
                 } else if (value <= 0) {
                     alert("Por favor, insira um valor maior que 0")
                 } else if (value > storageCopy.whereIsTheMoney[from.value].value) {

@@ -213,6 +213,8 @@ const DOM = {
             throw new Error("Por favor, insira um nome")
         } else if (inputsValue[1] === "") {
             throw new Error("Por favor, insira um valor")
+        } else if (isNaN(inputsValue[1])) {
+            throw new Error("Por favor, insira um valor numérico")
         } else if (inputsValue[2] === "") {
             throw new Error("Por favor, insira uma data")
         }

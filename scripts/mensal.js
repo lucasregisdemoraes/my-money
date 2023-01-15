@@ -33,7 +33,7 @@ const App = {
         DOM.modal.close()
         DOM.confirmationModal.close()
         DOM.moreInfoModal.close()
-        
+
         // open more info modal 
         document.querySelectorAll(".table-item-button").forEach(element => {
             element.onclick = event => {
@@ -178,6 +178,8 @@ const DOM = {
 
         if (inputsValue[0] === "" && inputsValue[1] === "" && inputsValue[2] === "") {
             alert("Por favor, insira um valor")
+        } if (isNaN(inputsValue[0]) || isNaN(inputsValue[1]) || isNaN(inputsValue[2])) {
+            alert("Por favor, insira um valor numérico")
         } else if (inputsValue[3] === "") {
             alert("Por favor, insira uma data")
         } else if (inputsValue[4] === "") {
