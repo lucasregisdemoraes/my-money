@@ -145,7 +145,8 @@
             <button class="edit-button">Editar</button>
             <button class="delete-button">Apagar</button>
             <button class="update-button">Atualizar</button>
-            <button class="toggle-redeem-button">Resgatar investimento</button>
+            <button class="invest-button">Investir</button>
+            <button class="toggle-redeem-button">Resgatar</button>
         </div>
     </div>
 
@@ -176,6 +177,27 @@
             </form>
         </div>
     </div>
+
+    <div class="modal invest-modal">
+        <div class="container">
+            <div class="close-modal-button"></div>
+            <h2>Investir</h2>
+            <form>
+                <div class="investment-info">
+                    <div>
+                        <label for="value">Valor</label>
+                        <input name="value" type="text">
+                    </div>
+                    <div>
+                        <label for="month">Mês</label>
+                        <input name="month" type="date">
+                    </div>
+                </div>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
+    </div>
+
     <script src="../../scripts/investimentos.js" type="module"></script>
 </body>
 

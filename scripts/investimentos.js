@@ -40,6 +40,7 @@ const App = {
         DOM.mainModal.clearFields()
         DOM.moreInfoModal.close()
         DOM.updateInvestmentModal.close()
+        DOM.investModal.close()
 
         // open investment options 
         document.querySelectorAll(".table-item-button").forEach(element => {
@@ -308,6 +309,8 @@ const DOM = {
                 try {
                     if (valueInput.value === "") {
                         throw new Error("Por favor, insira um valor")
+                    } else if (isNaN(valueInput.value)) {
+                        throw new Error("Por favor, insira um valor numérico")
                     } else if (monthInput.value === "") {
                         throw new Error("Por favor, insira um mês")
                     } else if (valueInput.value < lastMonthValue) {
@@ -316,7 +319,8 @@ const DOM = {
                     } else {
                         const newMonth = {
                             month: monthInput.value,
-                            value: Number(valueInput.value)
+                            value: Number(valueInput.value),
+                            invested: 0
                         }
 
                         InvestmentsFunctions.update(index, newMonth)
@@ -335,6 +339,57 @@ const DOM = {
             document.querySelector(".update-modal input[name='value']").value = ""
             document.querySelector(".update-modal input[name='month']").value = ""
         }
+    },
+    investModal: {
+        open: index => {
+            document.querySelector(".invest-modal").classList.add("active")
+
+            document.querySelector(".invest-modal form").onsubmit = event => {
+                event.preventDefault()
+
+                const value = Number(document.querySelector(".invest-modal form input[name='value'").value)
+                let month = document.querySelector(".invest-modal form input[name='month'").value
+                month = Utils.convertDateFormat(month, "-", "/")
+                const accountValue = Storage.get().whereIsTheMoney.account.value
+                const previousValue = Storage.get().investments[index].invested
+                const monthExists = Storage.get().investments[index].months.find(item => {
+                    return item.month.substring(3) === month.substring(3)
+                })
+
+                try {
+                    if (value === "") {
+                        throw new Error("Por favor, insira um valor")
+                    } else if (isNaN(value)) {
+                        throw new Error("Por favor, insira um valor numérico")
+                    } else if ((value - previousValue) > accountValue) {
+                        throw new Error(`Por favor, insira um valor menor que o disponível na conta
+                Dinheiro disponivel: ${Utils.formatValueToCurrency(accountValue)}`)
+                    } else if (Number(value) < 0) {
+                        throw new Error("Por favor, insira um valor positivo")
+                    } else if (month === "") {
+                        throw new Error("Por favor, insira um mês")
+                    } else if (!monthExists) {
+                        throw new Error(`Por favor, insira um mês existente nesse investimento
+                        meses existentes: ${
+                            Storage.get().investments[index].months.map(month => month.month.substring(3))
+                        }`)
+                    } else {
+                        InvestmentsFunctions.invest(index, value, month)
+                        DOM.investModal.clearFields()
+                        App.reload()
+                    }
+                } catch (error) {
+                    alert(error.message)
+                }
+            }
+        },
+        close: () => {
+            document.querySelector(".invest-modal").classList.remove("active")
+        },
+        clearFields: () => {
+            document.querySelector(".invest-modal input[name='value']").value = ""
+            document.querySelector(".invest-modal input[name='month']").value = ""
+        }
     }
 }
 
@@ -351,6 +406,7 @@ window.onkeyup = e => {
         DOM.mainModal.close()
         DOM.moreInfoModal.close()
         DOM.updateInvestmentModal.close()
+        DOM.investModal.close()
     }
 }
 
@@ -359,6 +415,7 @@ document.querySelectorAll(".close-modal-button").forEach(button => {
         DOM.mainModal.close()
         DOM.moreInfoModal.close()
         DOM.updateInvestmentModal.close()
+        DOM.investModal.close()
     }
 })
 
@@ -376,6 +433,10 @@ document.querySelector(".edit-button").onclick = event => {
 
 document.querySelector(".update-button").onclick = event => {
     DOM.updateInvestmentModal.open(event.currentTarget.dataset.index)
+}
+
+document.querySelector(".invest-button").onclick = event => {
+    DOM.investModal.open(event.currentTarget.dataset.index)
 }
 
 document.querySelector(".toggle-redeem-button").onclick = event => {

@@ -68,6 +68,25 @@ export default {
 
         Storage.set(storageCopy)
     },
+    invest: (index, value, month) => {
+        let storageCopy = Storage.get()
+        const previousValue = storageCopy.investments[index].invested
+        const monthIndex = Storage.get().investments[index].months.findIndex(item => {
+            return item.month.substring(3) === month.substring(3)
+        })
+
+        if (value > previousValue) {
+            storageCopy.whereIsTheMoney.account.value -= value - previousValue
+            storageCopy.whereIsTheMoney.investments.value += value - previousValue
+        } else {
+            storageCopy.whereIsTheMoney.account.value += previousValue - value
+            storageCopy.whereIsTheMoney.investments.value -= previousValue - value
+        }
+        storageCopy.investments[index].invested = value
+        storageCopy.investments[index].months[monthIndex].value = value
+
+        Storage.set(storageCopy)
+    },
     toggleRedeem: index => {
         let storageCopy = Storage.get()
         const investment = storageCopy.investments[index]
