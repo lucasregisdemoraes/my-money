@@ -11,7 +11,8 @@ export default {
             months: [
                 {
                     month: newInvestment.date,
-                    value: Number(newInvestment.value)
+                    value: Number(newInvestment.value),
+                    invested: 0
                 }
             ],
             status: "ativo"
@@ -82,8 +83,11 @@ export default {
             storageCopy.whereIsTheMoney.account.value += previousValue - value
             storageCopy.whereIsTheMoney.investments.value -= previousValue - value
         }
-        storageCopy.investments[index].invested = value
-        storageCopy.investments[index].months[monthIndex].value = value
+        storageCopy.investments[index].invested += value
+        storageCopy.investments[index].months[monthIndex].value += value
+        storageCopy.investments[index].months[monthIndex].invested += value
+
+        console.log(storageCopy.investments[index])
 
         Storage.set(storageCopy)
     },
