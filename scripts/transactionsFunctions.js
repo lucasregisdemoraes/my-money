@@ -42,26 +42,44 @@ export default {
 
         storageCopy.transactions.push(parameters.newTransaction)
 
-        storageCopy.whereIsTheMoney.account.value =
-            storageCopy.whereIsTheMoney.account.value + parameters.newTransaction.paymentMethods.account
+        Storage.set(storageCopy)
+    },
+    transfer: ({ value, date, from, to}) => {
+        let storageCopy = Storage.get()
 
-        storageCopy.whereIsTheMoney.cash.value =
-            storageCopy.whereIsTheMoney.cash.value + parameters.newTransaction.paymentMethods.cash
+        const firstTransaction = {
+            paymentMethods: {
+                account: 0,
+                cash: 0,
+                coin: 0
+            },
+            value: Number(value),
+            date: Utils.convertDateFormat(date, "-", "/"),
+            description: `Transferência: de ${from} para ${to}`
+        }
 
-        storageCopy.whereIsTheMoney.coin.value =
-            storageCopy.whereIsTheMoney.coin.value + parameters.newTransaction.paymentMethods.coin
+        firstTransaction.paymentMethods[from] -= value
+
+        let secondTransaction = {
+            paymentMethods: {
+                account: 0,
+                cash: 0,
+                coin: 0
+            },
+            value: Number(value),
+            date: Utils.convertDateFormat(date, "-", "/"),
+            description: `Transferência: de ${from} para ${to}`
+        }
+
+        secondTransaction.paymentMethods[to] += value
+
+        storageCopy.transactions.push(firstTransaction)
+        storageCopy.transactions.push(secondTransaction)
 
         Storage.set(storageCopy)
     },
     remove: index => {
         let storageCopy = Storage.get()
-
-        storageCopy.whereIsTheMoney.account.value -=
-            storageCopy.transactions[index].paymentMethods.account
-        storageCopy.whereIsTheMoney.cash.value -=
-            storageCopy.transactions[index].paymentMethods.cash
-        storageCopy.whereIsTheMoney.coin.value -=
-            storageCopy.transactions[index].paymentMethods.coin
 
         storageCopy.transactions.splice(index, 1)
 
@@ -74,22 +92,6 @@ export default {
             newTransaction: .....
         } */
         let storageCopy = Storage.get()
-
-        // remove the previous transaction values from whereIsTheMoney
-        storageCopy.whereIsTheMoney.account.value -=
-            storageCopy.transactions[parameters.index].paymentMethods.account
-        storageCopy.whereIsTheMoney.cash.value -=
-            storageCopy.transactions[parameters.index].paymentMethods.cash
-        storageCopy.whereIsTheMoney.coin.value -=
-            storageCopy.transactions[parameters.index].paymentMethods.coin
-
-        // add the new transaction values to whereIsTheMoney
-        storageCopy.whereIsTheMoney.account.value +=
-            parameters.newTransaction.paymentMethods.account
-        storageCopy.whereIsTheMoney.cash.value +=
-            parameters.newTransaction.paymentMethods.cash
-        storageCopy.whereIsTheMoney.coin.value +=
-            parameters.newTransaction.paymentMethods.coin
 
         storageCopy.transactions[parameters.index] = parameters.newTransaction
 

@@ -18,17 +18,17 @@ export default {
             status: "ativo"
         })
 
-        storageCopy.whereIsTheMoney.account.value -= Number(newInvestment.value)
-        storageCopy.whereIsTheMoney.investments.value += Number(newInvestment.value)
-
         Storage.set(storageCopy)
     },
     remove: index => {
         let storageCopy = Storage.get()
-        const value = Storage.get().investments[index].invested
+        const lastValue = Storage.get().investments[index]
+            .months[Storage.get().investments[index].months.length - 1].value
+        const status = storageCopy.investments[index].status
+        let invested = storageCopy.investments[index].invested
+        invested += storageCopy.investments[index].months.reduce((total, monthObject) =>
+            total + monthObject.invested, 0)
 
-        storageCopy.whereIsTheMoney.account.value += value
-        storageCopy.whereIsTheMoney.investments.value -= value
         storageCopy.investments.splice(index, 1)
 
         Storage.set(storageCopy)
@@ -42,14 +42,6 @@ export default {
         let storageCopy = Storage.get()
         const previousValue = Storage.get().investments[parameters.index].invested
         const newValue = Number(parameters.newInvestment.value)
-
-        // remove the previous investments values from whereIsTheMoney
-        storageCopy.whereIsTheMoney.account.value += previousValue
-        storageCopy.whereIsTheMoney.investments.value -= previousValue
-
-        // add the new investments values to whereIsTheMoney
-        storageCopy.whereIsTheMoney.account.value -= newValue
-        storageCopy.whereIsTheMoney.investments.value += newValue
 
         // add the new values to the investment
         storageCopy.investments[parameters.index].name = parameters.newInvestment.name
@@ -71,23 +63,13 @@ export default {
     },
     invest: (index, value, month) => {
         let storageCopy = Storage.get()
-        const previousValue = storageCopy.investments[index].invested
+        const status = storageCopy.investments[index].status
         const monthIndex = Storage.get().investments[index].months.findIndex(item => {
             return item.month.substring(3) === month.substring(3)
         })
 
-        if (value > previousValue) {
-            storageCopy.whereIsTheMoney.account.value -= value - previousValue
-            storageCopy.whereIsTheMoney.investments.value += value - previousValue
-        } else {
-            storageCopy.whereIsTheMoney.account.value += previousValue - value
-            storageCopy.whereIsTheMoney.investments.value -= previousValue - value
-        }
-        storageCopy.investments[index].invested += value
         storageCopy.investments[index].months[monthIndex].value += value
         storageCopy.investments[index].months[monthIndex].invested += value
-
-        console.log(storageCopy.investments[index])
 
         Storage.set(storageCopy)
     },
@@ -96,16 +78,6 @@ export default {
         const investment = storageCopy.investments[index]
         const status = storageCopy.investments[index].status
         const lastMonthValue = investment.months[investment.months.length - 1].value
-
-        /* if redeem investment add the value to account and subtract from investments,
-            otherwise subtract from account an add to investments */
-        if (status === "ativo") {
-            storageCopy.whereIsTheMoney.account.value += lastMonthValue
-            storageCopy.whereIsTheMoney.investments.value -= lastMonthValue
-        } else {
-            storageCopy.whereIsTheMoney.account.value -= lastMonthValue
-            storageCopy.whereIsTheMoney.investments.value += lastMonthValue
-        }
 
         // if investment status is "ativo", 
         // change to "resgatado", otherwise to "ativo"
@@ -123,11 +95,12 @@ export default {
         if (investment.months.length > 1) {
             // get last month
             const lastMonth = investment.months[investment.months.length - 1]
+
             // get penult month
             const penultMonth = investment.months[investment.months.length - 2]
 
-            lastMonthIncome = lastMonth.value - penultMonth.value
-            lastMonthIncomePercentage = lastMonthIncome / penultMonth.value * 100
+            lastMonthIncome = (lastMonth.value - lastMonth.invested) - (penultMonth.value - penultMonth.invested)
+            lastMonthIncomePercentage = lastMonthIncome / (penultMonth.value - penultMonth.invested) * 100
         }
 
         return type === "value" ? lastMonthIncome : lastMonthIncomePercentage
@@ -139,8 +112,14 @@ export default {
         if (investment.months.length > 1) {
             const firstMonth = investment.months[0]
             const lastMonth = investment.months[investment.months.length - 1]
+            let totalInvested = 0
 
-            totalIncome = lastMonth.value - firstMonth.value
+            investment.months.forEach(month => {
+                totalInvested += month.invested
+            })
+
+
+            totalIncome = (lastMonth.value - firstMonth.value) - totalInvested
             totalIncomePercentage = totalIncome / firstMonth.value * 100
         }
 

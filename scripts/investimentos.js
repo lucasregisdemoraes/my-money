@@ -179,13 +179,19 @@ const DOM = {
                                 message: `Deseja editar ${investment.name}?`
                             }
                         })
-
                     } else {
                         // if it is not an edit modal validate fields and use new investment function
-                        DOM.validateFields({
-                            functionToDo: InvestmentsFunctions.new,
-                            functionParameter: investment
-                        })
+                        if ((Utils.getTotalValue().account.value - Number(investment.value)) < 0) {
+                            alert(`Por favor, insira um valor menor, o valor inserido é maior que o disponível na conta
+                                    Valor disponível: ${Utils.formatValueToCurrency(Utils.getTotalValue().account.value)}`)
+                        } else if (Number(investment.value) < 0) {
+                            alert("Por favor, insira um valor positivo")
+                        } else {
+                            DOM.validateFields({
+                                functionToDo: InvestmentsFunctions.new,
+                                functionParameter: investment
+                            })
+                        }
                     }
                 } catch (error) {
                     alert(error.message)
@@ -298,13 +304,17 @@ const DOM = {
 
             const valueInput = document.querySelector(".update-modal input[name='value']")
             const monthInput = document.querySelector(".update-modal input[name='month']")
+            const lastMonthValue = Storage.get().investments[index]
+                .months[Storage.get().investments[index]
+                    .months.length - 1].value
 
             document.querySelector(".update-modal form").onsubmit = event => {
                 event.preventDefault()
 
-                const lastMonthValue = Storage.get().investments[index]
-                    .months[Storage.get().investments[index]
-                        .months.length - 1].value
+                const monthExists = Storage.get().investments[index]
+                    .months.find(monthObject => {
+                        return monthObject.month.substring(3) === Utils.convertDateFormat(monthInput.value, "-", "/").substring(3)
+                    })
 
                 try {
                     if (valueInput.value === "") {
@@ -313,12 +323,14 @@ const DOM = {
                         throw new Error("Por favor, insira um valor numérico")
                     } else if (monthInput.value === "") {
                         throw new Error("Por favor, insira um mês")
+                    } else if (monthExists) {
+                        throw new Error("Por favor, insira um mês ainda não inserido")
                     } else if (valueInput.value < lastMonthValue) {
                         throw new Error(`Por favor, insira um valor maior que o atual
                         Valor atual: ${Utils.formatValueToCurrency(lastMonthValue)}`)
                     } else {
                         const newMonth = {
-                            month: monthInput.value,
+                            month: Utils.convertDateFormat(monthInput.value, "-", "/"),
                             value: Number(valueInput.value),
                             invested: 0
                         }
@@ -350,7 +362,7 @@ const DOM = {
                 const value = Number(document.querySelector(".invest-modal form input[name='value'").value)
                 let month = document.querySelector(".invest-modal form input[name='month'").value
                 month = Utils.convertDateFormat(month, "-", "/")
-                const accountValue = Storage.get().whereIsTheMoney.account.value
+                const accountValue = Utils.getTotalValue().account.value
                 const previousValue = Storage.get().investments[index].invested
                 const monthExists = Storage.get().investments[index].months.find(item => {
                     return item.month.substring(3) === month.substring(3)
@@ -361,18 +373,16 @@ const DOM = {
                         throw new Error("Por favor, insira um valor")
                     } else if (isNaN(value)) {
                         throw new Error("Por favor, insira um valor numérico")
-                    } else if ((value - previousValue) > accountValue) {
+                    } else if (value > accountValue) {
                         throw new Error(`Por favor, insira um valor menor que o disponível na conta
                 Dinheiro disponivel: ${Utils.formatValueToCurrency(accountValue)}`)
-                    } else if (Number(value) < 0) {
-                        throw new Error("Por favor, insira um valor positivo")
                     } else if (month === "") {
                         throw new Error("Por favor, insira um mês")
                     } else if (!monthExists) {
                         throw new Error(`Por favor, insira um mês existente nesse investimento
-                        meses existentes: ${
-                            Storage.get().investments[index].months.map(month => month.month.substring(3))
-                        }`)
+                        meses existentes: ${Storage.get().investments[index].months
+                                .map(month => month.month.substring(3))
+                            }`)
                     } else {
                         InvestmentsFunctions.invest(index, value, month)
                         DOM.investModal.clearFields()

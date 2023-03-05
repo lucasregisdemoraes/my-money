@@ -6,7 +6,7 @@ import Backup from "./backup.js"
 
 const App = {
     init: () => {
-        DOM.setWhereIsTheMoney(Storage.get().whereIsTheMoney)
+        DOM.setWhereIsTheMoney(Utils.getTotalValue())
         DOM.setInvestmentsCards(Storage.get().investments)
         DOM.setInvestmentsTable(Storage.get().investments)
         DOM.setAnnualTable(Storage.get().transactions)
@@ -143,6 +143,8 @@ const DOM = {
                 const inputs = [...document.querySelectorAll(".new-transaction-modal form input")]
                     .map(input => input)
 
+                const totalValue = Number(inputs[0].value) + Number(inputs[1].value) + Number(inputs[2].value)
+
                 const newTransaction = {
                     paymentMethods: {
                         account: Number(inputs[0].value),
@@ -162,6 +164,14 @@ const DOM = {
                     alert("Por favor, insira uma data")
                 } else if (inputs[4].value === "") {
                     alert("Por favor, insira uma descrição")
+                } else if (Utils.getTotalValue().account.value + Number(inputs[0].value) < 0
+                    || Utils.getTotalValue().cash.value + Number(inputs[1].value) < 0
+                    || Utils.getTotalValue().coin.value + Number(inputs[2].value) < 0) {
+                    alert(`Por favor, insira um valor menor que o disponível
+                        Valor disponível: 
+                            Conta: ${Utils.formatValueToCurrency(Utils.getTotalValue().account.value)}
+                            Dinheiro: ${Utils.formatValueToCurrency(Utils.getTotalValue().cash.value)}
+                            Moeda: ${Utils.formatValueToCurrency(Utils.getTotalValue().coin.value)}`)
                 } else {
                     TransactionsFunctions.new({
                         newTransaction: newTransaction
@@ -196,8 +206,9 @@ const DOM = {
                     alert("Por favor, insira um valor")
                 } else if (isNaN(inputs[1].value)) {
                     alert("Por favor, insira um valor numérico")
-                } else if (Number(inputs[1].value) > Storage.get().whereIsTheMoney.account.value) {
-                    alert("Por favor, insira um valor menor, o valor inserido é maior que o disponivel na conta")
+                } else if (Number(inputs[1].value) > Utils.getTotalValue().account.value) {
+                    alert(`Por favor, insira um valor menor, o valor inserido é maior que o disponível na conta
+                            Valor disponível: ${Utils.formatValueToCurrency(Utils.getTotalValue().account.value)}`)
                 } else if (Number(inputs[1].value) < 0) {
                     alert("Por favor, insira um valor positivo")
                 } else if (inputs[2].value === "") {
@@ -220,12 +231,11 @@ const DOM = {
             document.querySelector(".new-transfer-modal form").onsubmit = event => {
                 event.preventDefault()
                 const value = Number(document.querySelector("#transfer-value").value)
+                const date = document.querySelector("#transfer-date").value
                 const from = [...document.getElementsByName("from")]
                     .find(element => element.checked)
                 const to = [...document.getElementsByName("to")]
                     .find(element => element.checked)
-
-                let storageCopy = Storage.get()
 
                 if (from === undefined) {
                     alert("Por favor, selecione o local de onde fazer a transferência")
@@ -235,16 +245,18 @@ const DOM = {
                     alert("Por favor, insira um valor numérico")
                 } else if (value <= 0) {
                     alert("Por favor, insira um valor maior que 0")
-                } else if (value > storageCopy.whereIsTheMoney[from.value].value) {
-                    alert(`Por favor, insira um valor maior menor ou igual ao disponível em: ${storageCopy.whereIsTheMoney[from.value].name}
-                                Valor disponível: ${Utils.formatValueToCurrency(storageCopy.whereIsTheMoney[from.value].value)}`)
+                } else if (value > Utils.getTotalValue()[from.value].value) {
+                    alert(`Por favor, insira um valor menor ou igual ao disponível em: ${Utils.getTotalValue()[from.value].name}
+                                Valor disponível: ${Utils.formatValueToCurrency(Utils.getTotalValue()[from.value].value)}`)
                 } else if (to === undefined) {
                     alert("Por favor, selecione o local para onde fazer a transferência")
                 } else {
-                    storageCopy.whereIsTheMoney[from.value].value -= value
-                    storageCopy.whereIsTheMoney[to.value].value += value
-
-                    Storage.set(storageCopy)
+                    TransactionsFunctions.transfer({
+                        value: value,
+                        date: date,
+                        from: from.value,
+                        to: to.value
+                    })
 
                     App.reload()
                 }
